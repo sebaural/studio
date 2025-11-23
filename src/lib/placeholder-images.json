@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "1",
+      "description": "An old portrait of a man from the 1920s.",
+      "imageUrl": "https://images.unsplash.com/photo-1607031542107-f6f46b5d54e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjM5MjU3NzF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "2",
+      "description": "An old portrait of a woman from the 1920s.",
+      "imageUrl": "https://images.unsplash.com/photo-1557053908-4793c484d06f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc2MzgzNjUwNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "3",
+      "description": "A portrait of a man from the 1950s.",
+      "imageUrl": "https://images.unsplash.com/photo-1687253858351-4330ecbc6ed2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxtYW4lMjAxOTUwc3xlbnwwfHx8fDE3NjM5MzkzOTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man 1950s"
+    },
+    {
+      "id": "4",
+      "description": "A portrait of a woman from the 1950s.",
+      "imageUrl": "https://images.unsplash.com/photo-1758657209300-2a4a1bf952ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx3b21hbiUyMDE5NTBzfGVufDB8fHx8MTc2MzkzOTM5MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman 1950s"
+    },
+    {
+      "id": "5",
+      "description": "A color photo of a man from the 1980s.",
+      "imageUrl": "https://images.unsplash.com/photo-1601661613666-360a3b9ff538?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtYW4lMjAxOTgwc3xlbnwwfHx8fDE3NjM5MzkzOTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man 1980s"
+    },
+    {
+      "id": "6",
+      "description": "A color photo of a woman from the 1980s.",
+      "imageUrl": "https://images.unsplash.com/photo-1723828768859-7d95d4dd4114?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx3b21hbiUyMDE5ODBzfGVufDB8fHx8MTc2MzkzOTM5MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman 1980s"
+    }
+  ]
 }
