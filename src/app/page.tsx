@@ -9,10 +9,10 @@ import AddFamilyMemberDialog from '@/components/app/AddFamilyMemberDialog';
 const initialMembers: FamilyMember[] = [
   {
     id: '1',
-    name: 'John Smith',
+    name: 'Sebastian Pereira',
     birthDate: '1920-05-15',
     deathDate: '1995-10-20',
-    birthplace: 'London, England',
+    birthplace: 'Lesbon, Portugal',
     bio: 'A veteran of World War II, John was a carpenter by trade and a loving grandfather.',
     photoUrl: 'https://picsum.photos/seed/heritage1/400/400',
     photoHint: 'man portrait',
