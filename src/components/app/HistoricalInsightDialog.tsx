@@ -30,7 +30,7 @@ export default function HistoricalInsightDialog({ member }: HistoricalInsightDia
   const handleOpenChange = (open: boolean) => {
     setOpen(open);
     if (open) {
-      // Reset state when dialog is opened
+      // Reset state when dialog is opened to ensure fresh data is fetched
       setInsight(null);
       setError(null);
     }
@@ -129,6 +129,8 @@ export default function HistoricalInsightDialog({ member }: HistoricalInsightDia
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Generating...
               </>
+            ) : insight ? (
+              'Regenerate Insights'
             ) : (
               'Generate Insights'
             )}

@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format, parse, parseISO, isValid } from 'date-fns';
-import { CalendarIcon, UserPlus } from 'lucide-react';
+import { CalendarIcon, UserPlus, XIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -47,7 +47,7 @@ const formSchema = z.object({
   bio: z.string().max(500, { message: 'Biography cannot exceed 500 characters.' }).optional(),
   photoUrl: z.string().url({ message: 'Please select a valid photo.' }),
   parents: z.array(z.string()).max(2).optional(),
-  spouse: z.string().optional(),
+  spouse: z.string().optional().nullable(),
 });
 
 type AddFamilyMemberDialogProps = {
@@ -73,31 +73,34 @@ export default function AddFamilyMemberDialog({
       bio: '',
       photoUrl: PlaceHolderImages[0]?.imageUrl || '',
       parents: [],
-      spouse: '',
+      spouse: null,
     },
   });
 
   useEffect(() => {
-    if (isOpen && existingMember) {
-      form.reset({
-        name: existingMember.name,
-        birthDate: existingMember.birthDate ? parseISO(existingMember.birthDate) : undefined,
-        deathDate: existingMember.deathDate ? parseISO(existingMember.deathDate) : undefined,
-        birthplace: existingMember.birthplace,
-        bio: existingMember.bio,
-        photoUrl: existingMember.photoUrl,
-        parents: existingMember.parents,
-        spouse: existingMember.spouse,
-      });
-    } else if (isOpen && !existingMember) {
-      form.reset({
-        name: '',
-        birthplace: '',
-        bio: '',
-        photoUrl: PlaceHolderImages[Math.floor(Math.random() * PlaceHolderImages.length)]?.imageUrl || '',
-        parents: [],
-        spouse: '',
-      });
+    if (isOpen) {
+      if (existingMember) {
+        form.reset({
+          name: existingMember.name,
+          birthDate: existingMember.birthDate ? parseISO(existingMember.birthDate) : undefined,
+          deathDate: existingMember.deathDate ? parseISO(existingMember.deathDate) : undefined,
+          birthplace: existingMember.birthplace,
+          bio: existingMember.bio,
+          photoUrl: existingMember.photoUrl,
+          parents: existingMember.parents || [],
+          spouse: existingMember.spouse || null,
+        });
+      } else {
+        form.reset({
+          name: '',
+          birthplace: '',
+          bio: '',
+          photoUrl: PlaceHolderImages[Math.floor(Math.random() * PlaceHolderImages.length)]?.imageUrl || '',
+          parents: [],
+          spouse: null,
+          deathDate: undefined,
+        });
+      }
     }
   }, [isOpen, existingMember, form]);
 
@@ -106,6 +109,7 @@ export default function AddFamilyMemberDialog({
     const memberData: FamilyMember = {
       id: existingMember?.id || new Date().toISOString() + Math.random(),
       ...values,
+      spouse: values.spouse || undefined,
       birthDate: format(values.birthDate, 'yyyy-MM-dd'),
       deathDate: values.deathDate ? format(values.deathDate, 'yyyy-MM-dd') : undefined,
       photoHint: photoData?.imageHint || 'person',
@@ -115,6 +119,18 @@ export default function AddFamilyMemberDialog({
   };
   
   const selectableMembers = allMembers.filter(m => m.id !== existingMember?.id);
+
+  const handleParentSelect = (parentId: string) => {
+    const currentParents = form.getValues('parents') || [];
+    if (currentParents.length < 2 && !currentParents.includes(parentId)) {
+      form.setValue('parents', [...currentParents, parentId]);
+    }
+  }
+
+  const handleParentRemove = (parentId: string) => {
+    const currentParents = form.getValues('parents') || [];
+    form.setValue('parents', currentParents.filter(id => id !== parentId));
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -255,7 +271,7 @@ export default function AddFamilyMemberDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Parents</FormLabel>
-                    <Select onValueChange={(value) => field.onChange(field.value ? [...field.value, value] : [value])}>
+                    <Select onValueChange={handleParentSelect} value="">
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select up to 2 parents" />
@@ -269,10 +285,17 @@ export default function AddFamilyMemberDialog({
                         ))}
                       </SelectContent>
                     </Select>
-                     <div className="flex gap-2 mt-2">
+                     <div className="flex flex-wrap gap-2 mt-2">
                       {field.value?.map(pId => {
                         const parent = allMembers.find(m => m.id === pId);
-                        return parent ? <span key={pId} className="text-sm bg-secondary text-secondary-foreground p-1 rounded-md">{parent.name}</span> : null;
+                        return parent ? (
+                          <span key={pId} className="flex items-center gap-1 text-sm bg-secondary text-secondary-foreground py-1 px-2 rounded-md">
+                            {parent.name}
+                            <button onClick={() => handleParentRemove(pId)} className="rounded-full hover:bg-black/10">
+                              <XIcon className="w-3 h-3" />
+                            </button>
+                          </span>
+                        ) : null;
                       })}
                     </div>
                     <FormMessage />
@@ -286,13 +309,14 @@ export default function AddFamilyMemberDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Spouse</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value || ''} >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a spouse" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
+                        <SelectItem value="null">None</SelectItem>
                         {selectableMembers.map((m) => (
                           <SelectItem key={m.id} value={m.id}>
                             {m.name}
