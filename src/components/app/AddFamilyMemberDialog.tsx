@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { format, parse, parseISO } from 'date-fns';
+import { format, parse, parseISO, isValid } from 'date-fns';
 import { CalendarIcon, UserPlus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -167,11 +167,13 @@ export default function AddFamilyMemberDialog({
                       <FormControl>
                         <Input
                           placeholder="yyyy-mm-dd"
-                          value={field.value ? format(field.value, 'yyyy-MM-dd') : ''}
+                          value={field.value instanceof Date && isValid(field.value) ? format(field.value, 'yyyy-MM-dd') : field.value || ''}
                           onChange={(e) => {
                             const date = parse(e.target.value, 'yyyy-MM-dd', new Date());
-                            if (!isNaN(date.getTime())) {
+                            if (isValid(date)) {
                               field.onChange(date);
+                            } else {
+                               field.onChange(e.target.value);
                             }
                           }}
                         />
@@ -189,7 +191,7 @@ export default function AddFamilyMemberDialog({
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
-                            selected={field.value}
+                            selected={field.value instanceof Date && isValid(field.value) ? field.value : undefined}
                             onSelect={field.onChange}
                             disabled={(date) => date > new Date() || date < new Date('1700-01-01')}
                             initialFocus
@@ -211,11 +213,13 @@ export default function AddFamilyMemberDialog({
                       <FormControl>
                         <Input
                           placeholder="yyyy-mm-dd"
-                          value={field.value ? format(field.value, 'yyyy-MM-dd') : ''}
+                          value={field.value instanceof Date && isValid(field.value) ? format(field.value, 'yyyy-MM-dd') : field.value || ''}
                           onChange={(e) => {
                             const date = parse(e.target.value, 'yyyy-MM-dd', new Date());
-                             if (!isNaN(date.getTime())) {
+                            if (isValid(date)) {
                               field.onChange(date);
+                            } else {
+                               field.onChange(e.target.value);
                             }
                           }}
                         />
@@ -233,7 +237,7 @@ export default function AddFamilyMemberDialog({
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
-                            selected={field.value}
+                            selected={field.value instanceof Date && isValid(field.value) ? field.value : undefined}
                             onSelect={field.onChange}
                             disabled={(date) => date > new Date() || date < new Date('1700-01-01')}
                             initialFocus
