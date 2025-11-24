@@ -16,16 +16,25 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 type HistoricalInsightDialogProps = {
   member: FamilyMember;
 };
 
 export default function HistoricalInsightDialog({ member }: HistoricalInsightDialogProps) {
+  const [isOpen, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [insight, setInsight] = useState<HistoricalInsight | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const handleOpenChange = (open: boolean) => {
+    setOpen(open);
+    if (open) {
+      // Reset state when dialog is opened
+      setInsight(null);
+      setError(null);
+    }
+  };
 
   const handleGenerate = () => {
     startTransition(async () => {
@@ -47,7 +56,7 @@ export default function HistoricalInsightDialog({ member }: HistoricalInsightDia
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="outline" className="w-full gap-2">
           <Sparkles className="h-4 w-4 text-accent" />

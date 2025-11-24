@@ -9,8 +9,8 @@ import AddFamilyMemberDialog from '@/components/app/AddFamilyMemberDialog';
 const initialMembers: FamilyMember[] = [
   {
     id: '1',
-    name: 'Sebastian Pereira',
-    birthDate: '1920-05-15',
+    name: 'Semyon Slizh',
+    birthDate: '1908-10-24',
     deathDate: '1995-10-20',
     birthplace: 'Lesbon, Portugal',
     bio: 'A veteran of World War II, John was a carpenter by trade and a loving grandfather.',
