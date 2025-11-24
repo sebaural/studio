@@ -5,70 +5,7 @@ import type { FamilyMember } from '@/lib/types';
 import Header from '@/components/app/Header';
 import FamilyTree from '@/components/app/FamilyTree';
 import AddFamilyMemberDialog from '@/components/app/AddFamilyMemberDialog';
-
-const initialMembers: FamilyMember[] = [
-  {
-    id: '1',
-    name: 'Semyon Slizh',
-    birthDate: '1908-10-24',
-    deathDate: '1995-10-20',
-    birthplace: 'Lesbon, Portugal',
-    bio: 'A veteran of World War II, John was a carpenter by trade and a loving grandfather.',
-    photoUrl: 'https://picsum.photos/seed/heritage1/400/400',
-    photoHint: 'man portrait',
-    parents: [],
-    spouse: '2',
-    children: ['3'],
-  },
-  {
-    id: '2',
-    name: 'Mary Johnson',
-    birthDate: '1922-08-30',
-    deathDate: '2001-01-15',
-    birthplace: 'Manchester, England',
-    bio: 'Mary was a school teacher known for her kindness and delicious apple pies.',
-    photoUrl: 'https://picsum.photos/seed/heritage2/400/400',
-    photoHint: 'woman portrait',
-    parents: [],
-    spouse: '1',
-    children: ['3'],
-  },
-  {
-    id: '3',
-    name: 'Robert Smith',
-    birthDate: '1950-11-01',
-    birthplace: 'London, England',
-    bio: 'An architect who loved to sail. He designed several notable buildings in his city.',
-    photoUrl: 'https://picsum.photos/seed/heritage3/400/400',
-    photoHint: 'man 1950s',
-    parents: ['1', '2'],
-    spouse: '4',
-    children: ['5'],
-  },
-  {
-    id: '4',
-    name: 'Jane Doe',
-    birthDate: '1952-02-20',
-    birthplace: 'New York, USA',
-    bio: 'A journalist who traveled the world, Jane had a passion for storytelling and photography.',
-    photoUrl: 'https://picsum.photos/seed/heritage4/400/400',
-    photoHint: 'woman 1950s',
-    parents: [],
-    spouse: '3',
-    children: ['5'],
-  },
-  {
-    id: '5',
-    name: 'Sarah Smith',
-    birthDate: '1980-07-10',
-    birthplace: 'New York, USA',
-    bio: 'A software developer and amateur musician, Sarah carries on her family\'s legacy of creativity.',
-    photoUrl: 'https://picsum.photos/seed/heritage6/400/400',
-    photoHint: 'woman 1980s',
-    parents: ['3', '4'],
-    children: [],
-  },
-];
+import { initialMembers } from '@/lib/initial-data';
 
 export default function Home() {
   const [members, setMembers] = useState<FamilyMember[]>(initialMembers);
@@ -174,9 +111,7 @@ export default function Home() {
         return newMembers;
       });
 
-    if (editingMember) {
-      setEditingMember(memberToSave);
-    }
+    setEditingMember(memberToSave);
     setAddMemberOpen(false);
   };
   
