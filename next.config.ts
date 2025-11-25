@@ -1,4 +1,7 @@
 import type {NextConfig} from 'next';
+import createWithIntl from 'next-intl/plugin';
+
+const withIntl = createWithIntl();
 
 const nextConfig: NextConfig = {
   typescript: {
@@ -31,4 +34,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withIntl(nextConfig);

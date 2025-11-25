@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format, parse, parseISO, isValid } from 'date-fns';
 import { CalendarIcon, UserPlus, XIcon, Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -67,6 +68,8 @@ export default function AddFamilyMemberDialog({
   allMembers,
   isSaving,
 }: AddFamilyMemberDialogProps) {
+  const t = useTranslations('AddFamilyMemberDialog');
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -140,10 +143,10 @@ export default function AddFamilyMemberDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <UserPlus className="w-6 h-6" />
-            {existingMember ? 'Edit Family Member' : 'Add Family Member'}
+            {existingMember ? t('editTitle') : t('addTitle')}
           </DialogTitle>
           <DialogDescription>
-            {existingMember ? 'Update the details of this family member.' : 'Enter the details for a new family member.'}
+            {existingMember ? t('editDescription') : t('addDescription')}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -154,9 +157,9 @@ export default function AddFamilyMemberDialog({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Full Name</FormLabel>
+                    <FormLabel>{t('fullNameLabel')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., John Smith" {...field} />
+                      <Input placeholder={t('fullNamePlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -167,9 +170,9 @@ export default function AddFamilyMemberDialog({
                 name="birthplace"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Birthplace</FormLabel>
+                    <FormLabel>{t('birthplaceLabel')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., London, England" {...field} />
+                      <Input placeholder={t('birthplacePlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -180,7 +183,7 @@ export default function AddFamilyMemberDialog({
                 name="birthDate"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Date of Birth</FormLabel>
+                    <FormLabel>{t('birthDateLabel')}</FormLabel>
                     <div className="relative">
                       <FormControl>
                         <Input
@@ -226,7 +229,7 @@ export default function AddFamilyMemberDialog({
                 name="deathDate"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Date of Death (optional)</FormLabel>
+                    <FormLabel>{t('deathDateLabel')}</FormLabel>
                      <div className="relative">
                       <FormControl>
                         <Input
@@ -272,11 +275,11 @@ export default function AddFamilyMemberDialog({
                 name="parents"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Parents</FormLabel>
+                    <FormLabel>{t('parentsLabel')}</FormLabel>
                     <Select onValueChange={handleParentSelect} value="">
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select up to 2 parents" />
+                          <SelectValue placeholder={t('parentsPlaceholder')} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -310,15 +313,15 @@ export default function AddFamilyMemberDialog({
                 name="spouse"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Spouse</FormLabel>
+                    <FormLabel>{t('spouseLabel')}</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value || ''} >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a spouse" />
+                          <SelectValue placeholder={t('spousePlaceholder')} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="null">None</SelectItem>
+                        <SelectItem value="null">{t('spouseNone')}</SelectItem>
                         {selectableMembers.map((m) => (
                           <SelectItem key={m.id} value={m.id}>
                             {m.name}
@@ -336,9 +339,9 @@ export default function AddFamilyMemberDialog({
                 name="bio"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Short Biography</FormLabel>
+                    <FormLabel>{t('bioLabel')}</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="A short description of their life..." {...field} />
+                      <Textarea placeholder={t('bioPlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -352,11 +355,11 @@ export default function AddFamilyMemberDialog({
                 name="photoUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Profile Photo</FormLabel>
+                    <FormLabel>{t('photoLabel')}</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a photo" />
+                          <SelectValue placeholder={t('photoPlaceholder')} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -377,10 +380,10 @@ export default function AddFamilyMemberDialog({
 
             <DialogFooter>
               <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-                Cancel
+                {t('cancelButton')}
               </Button>
               <Button type="submit" disabled={isSaving}>
-                {isSaving ? <><Loader2 className="animate-spin" /> Saving...</> : 'Save Member'}
+                {isSaving ? <><Loader2 className="animate-spin" /> {t('savingButton')}</> : t('saveButton')}
               </Button>
             </DialogFooter>
           </form>

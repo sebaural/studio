@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import type { FamilyMember } from '@/lib/types';
 import FamilyMemberCard from './FamilyMemberCard';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
@@ -79,14 +80,16 @@ const FamilyNode: React.FC<FamilyNodeProps> = ({ memberId, allMembers, onEditMem
 
 
 const FamilyTree: React.FC<FamilyTreeProps> = ({ members, onEditMember }) => {
+  const t = useTranslations('FamilyTree');
+
   if (!members || members.length === 0) {
     return (
         <Card className='text-center w-full max-w-md mx-auto'>
             <CardHeader>
-                <CardTitle className='flex items-center justify-center gap-2 font-headline'><Users /> No Family Members</CardTitle>
+                <CardTitle className='flex items-center justify-center gap-2 font-headline'><Users /> {t('noMembersTitle')}</CardTitle>
             </CardHeader>
             <CardContent>
-                <p>Your family tree is empty. Start by adding a family member.</p>
+                <p>{t('noMembersDescription')}</p>
             </CardContent>
         </Card>
     );

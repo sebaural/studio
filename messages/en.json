@@ -1,0 +1,60 @@
+{
+  "Header": {
+    "title": "Heritage Hub",
+    "addMember": "Add Member"
+  },
+  "LanguageSwitcher": {
+    "toggle": "Switch to {locale, select, ru {Russian} other {English}}",
+    "en": "EN",
+    "ru": "RU"
+  },
+  "FamilyTree": {
+    "noMembersTitle": "No Family Members",
+    "noMembersDescription": "Your family tree is empty. Start by adding a family member."
+  },
+  "FamilyMemberCard": {
+    "present": "Present",
+    "portraitOf": "Portrait of",
+    "edit": "Edit"
+  },
+  "AddFamilyMemberDialog": {
+    "editTitle": "Edit Family Member",
+    "addTitle": "Add Family Member",
+    "editDescription": "Update the details of this family member.",
+    "addDescription": "Enter the details for a new family member.",
+    "fullNameLabel": "Full Name",
+    "fullNamePlaceholder": "e.g., John Smith",
+    "birthplaceLabel": "Birthplace",
+    "birthplacePlaceholder": "e.g., London, England",
+    "birthDateLabel": "Date of Birth",
+    "deathDateLabel": "Date of Death (optional)",
+    "parentsLabel": "Parents",
+    "parentsPlaceholder": "Select up to 2 parents",
+    "spouseLabel": "Spouse",
+    "spousePlaceholder": "Select a spouse",
+    "spouseNone": "None",
+    "bioLabel": "Short Biography",
+    "bioPlaceholder": "A short description of their life...",
+    "photoLabel": "Profile Photo",
+    "photoPlaceholder": "Select a photo",
+    "cancelButton": "Cancel",
+    "savingButton": "Saving...",
+    "saveButton": "Save Member"
+  },
+  "HistoricalInsightDialog": {
+    "buttonText": "AI Insights",
+    "title": "Historical Insights for {name}",
+    "description": "Discover AI-powered context about your ancestor's life and times.",
+    "initialPrompt": "Click the button below to generate insights about {name}'s name, birthplace, and the historical events of their era.",
+    "generating": "Generating historical insights...",
+    "errorTitle": "Error",
+    "nameMeaning": "Name Meaning",
+    "birthplaceInfo": "Birthplace Information",
+    "historicalEvents": "Historical Events",
+    "additionalInsights": "Additional Insights",
+    "generatingButton": "Generating...",
+    "regenerateButton": "Regenerate Insights",
+    "generateButton": "Generate Insights"
+  },
+  "Home": {}
+}

@@ -1,0 +1,60 @@
+{
+  "Header": {
+    "title": "Центр Наследия",
+    "addMember": "Добавить члена"
+  },
+  "LanguageSwitcher": {
+    "toggle": "Переключить на {locale, select, ru {русский} other {английский}}",
+    "en": "АНГ",
+    "ru": "РУС"
+  },
+  "FamilyTree": {
+    "noMembersTitle": "Нет членов семьи",
+    "noMembersDescription": "Ваше семейное древо пусто. Начните с добавления члена семьи."
+  },
+  "FamilyMemberCard": {
+    "present": "Настоящее",
+    "portraitOf": "Портрет",
+    "edit": "Редактировать"
+  },
+  "AddFamilyMemberDialog": {
+    "editTitle": "Редактировать члена семьи",
+    "addTitle": "Добавить члена семьи",
+    "editDescription": "Обновите данные этого члена семьи.",
+    "addDescription": "Введите данные нового члена семьи.",
+    "fullNameLabel": "Полное имя",
+    "fullNamePlaceholder": "например, Иван Иванов",
+    "birthplaceLabel": "Место рождения",
+    "birthplacePlaceholder": "например, Москва, Россия",
+    "birthDateLabel": "Дата рождения",
+    "deathDateLabel": "Дата смерти (необязательно)",
+    "parentsLabel": "Родители",
+    "parentsPlaceholder": "Выберите до 2 родителей",
+    "spouseLabel": "Супруг(а)",
+    "spousePlaceholder": "Выберите супруга(у)",
+    "spouseNone": "Нет",
+    "bioLabel": "Краткая биография",
+    "bioPlaceholder": "Краткое описание их жизни...",
+    "photoLabel": "Фото профиля",
+    "photoPlaceholder": "Выберите фото",
+    "cancelButton": "Отмена",
+    "savingButton": "Сохранение...",
+    "saveButton": "Сохранить"
+  },
+  "HistoricalInsightDialog": {
+    "buttonText": "AI инсайты",
+    "title": "Исторические инсайты для {name}",
+    "description": "Откройте для себя исторический контекст жизни и времени вашего предка с помощью ИИ.",
+    "initialPrompt": "Нажмите кнопку ниже, чтобы сгенерировать инсайты об имени {name}, месте рождения и исторических событиях их эпохи.",
+    "generating": "Генерация исторических инсайтов...",
+    "errorTitle": "Ошибка",
+    "nameMeaning": "Значение имени",
+    "birthplaceInfo": "Информация о месте рождения",
+    "historicalEvents": "Исторические события",
+    "additionalInsights": "Дополнительные инсайты",
+    "generatingButton": "Генерация...",
+    "regenerateButton": "Сгенерировать заново",
+    "generateButton": "Сгенерировать инсайты"
+  },
+  "Home": {}
+}
