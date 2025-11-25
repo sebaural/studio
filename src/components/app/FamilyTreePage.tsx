@@ -1,15 +1,28 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useMemo } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
 import type { FamilyMember } from '@/lib/types';
 import Header from '@/components/app/Header';
 import FamilyTree from '@/components/app/FamilyTree';
 import AddFamilyMemberDialog from '@/components/app/AddFamilyMemberDialog';
-import { initialMembers } from '@/lib/initial-data';
+import { initialMembers as staticInitialMembers } from '@/lib/initial-data';
 import { saveFamilyMembers } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 
 export default function FamilyTreePage() {
+  const t = useTranslations('FamilyMembers');
+  const locale = useLocale();
+
+  const initialMembers = useMemo(() => {
+    return staticInitialMembers.map(member => ({
+      ...member,
+      name: t(`${member.id}.name`),
+      birthplace: t(`${member.id}.birthplace`),
+      bio: t(`${member.id}.bio`),
+    }));
+  }, [t]);
+  
   const [members, setMembers] = useState<FamilyMember[]>(initialMembers);
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<FamilyMember | undefined>(undefined);

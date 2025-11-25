@@ -56,5 +56,32 @@
     "regenerateButton": "Regenerate Insights",
     "generateButton": "Generate Insights"
   },
-  "Home": {}
+  "Home": {},
+  "FamilyMembers": {
+    "1": {
+      "name": "Semyon Slizh",
+      "birthplace": "Slizhi, Belarus",
+      "bio": "A veteran of World War II, John was a carpenter by trade and a loving grandfather."
+    },
+    "2": {
+      "name": "Maria Ivanovna Slizh",
+      "birthplace": "Izhevsk, Russia",
+      "bio": "Mary was a school teacher known for her kindness and delicious apple pies."
+    },
+    "3": {
+      "name": "Yuriy Semyonovich Slizh",
+      "birthplace": "Chelyabinsk, Russia",
+      "bio": "An architect who loved to sail. He designed several notable buildings in his city."
+    },
+    "4": {
+      "name": "Valentina Slizh",
+      "birthplace": "Zaporozhie, Ukrane",
+      "bio": "A journalist who traveled the world, Jane had a passion for storytelling and photography."
+    },
+    "5": {
+      "name": "Sarah Smith",
+      "birthplace": "New York, USA",
+      "bio": "A software developer and amateur musician, Sarah carries on her family's legacy of creativity."
+    }
+  }
 }
