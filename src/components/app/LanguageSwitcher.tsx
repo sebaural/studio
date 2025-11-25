@@ -18,8 +18,20 @@ export default function LanguageSwitcher() {
   const pathname = usePathname();
 
   const switchLanguage = (nextLocale: string) => {
-    // This is the correct way to switch locales with the App Router
-    const newPath = pathname.replace(`/${locale}`, `/${nextLocale}`);
+    // In next-intl, the default locale doesn't have a prefix.
+    // The pathname for other locales is prefixed with `/<locale>`.
+    // We need to handle both cases when creating the new path.
+    const currentLocalePrefix = `/${locale}`;
+    let newPath;
+
+    if (pathname.startsWith(currentLocalePrefix)) {
+      // The current path has a locale prefix, so we replace it
+      newPath = pathname.replace(currentLocalePrefix, `/${nextLocale}`);
+    } else {
+      // The current path is for the default locale (no prefix), so we add one
+      newPath = `/${nextLocale}${pathname}`;
+    }
+
     router.replace(newPath);
   };
 
