@@ -23,7 +23,7 @@ export default function Header({ onAddMember }: HeaderProps) {
         </div>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
-          <Button onClick={onAddMember} className="gap-2">
+          <Button onClick={onAddMember} variant="outline" className="gap-2">
             <Plus className="h-5 w-5" />
             <span className="hidden sm:inline">{t('addMember')}</span>
           </Button>
