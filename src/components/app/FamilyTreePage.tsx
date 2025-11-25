@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useMemo } from 'react';
+import { useState, useTransition, useMemo, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import type { FamilyMember } from '@/lib/types';
 import Header from '@/components/app/Header';
@@ -14,20 +14,24 @@ export default function FamilyTreePage() {
   const t = useTranslations('FamilyMembers');
   const locale = useLocale();
 
-  const initialMembers = useMemo(() => {
+  const getTranslatedMembers = () => {
     return staticInitialMembers.map(member => ({
       ...member,
-      name: t(`${member.id}.name`),
-      birthplace: t(`${member.id}.birthplace`),
-      bio: t(`${member.id}.bio`),
+      name: t.rich(member.id + '.name' as any, {}),
+      birthplace: t.rich(member.id + '.birthplace' as any, {}),
+      bio: t.rich(member.id + '.bio' as any, {}),
     }));
-  }, [t]);
+  };
   
-  const [members, setMembers] = useState<FamilyMember[]>(initialMembers);
+  const [members, setMembers] = useState<FamilyMember[]>(getTranslatedMembers());
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<FamilyMember | undefined>(undefined);
   const [isSaving, startSaving] = useTransition();
   const { toast } = useToast();
+
+  useEffect(() => {
+    setMembers(getTranslatedMembers());
+  }, [locale, t]);
 
   const handleSaveMember = (memberToSave: FamilyMember) => {
     let newMembers: FamilyMember[];
@@ -132,7 +136,29 @@ export default function FamilyTreePage() {
       });
 
       startSaving(async () => {
-        const result = await saveFamilyMembers(newMembers);
+        // We need to save the non-translated version. We can find the original from staticInitialMembers
+        const membersToSave = newMembers.map(m => {
+            const staticMember = staticInitialMembers.find(sm => sm.id === m.id);
+            if (staticMember) {
+                return {
+                    ...staticMember,
+                    parents: m.parents,
+                    spouse: m.spouse,
+                    children: m.children
+                }
+            }
+            // This is a new member, so we need to "un-translate" it. 
+            // This is a hacky workaround for this prototype. In a real app,
+            // the form would submit the non-translated version.
+            return {
+                ...m,
+                name: `__NEEDS_TRANSLATION__${m.name}`,
+                birthplace: `__NEEDS_TRANSLATION__${m.birthplace}`,
+                bio: `__NEEDS_TRANSLATION__${m.bio}`,
+            };
+        });
+
+        const result = await saveFamilyMembers(membersToSave);
         if (result.success) {
           setAddMemberOpen(false);
           setEditingMember(undefined);
