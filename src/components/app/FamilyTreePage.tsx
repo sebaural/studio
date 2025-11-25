@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useMemo, useEffect } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import type { FamilyMember } from '@/lib/types';
 import Header from '@/components/app/Header';
@@ -31,7 +31,7 @@ export default function FamilyTreePage() {
 
   useEffect(() => {
     setMembers(getTranslatedMembers());
-  }, [locale, t]);
+  }, [locale]);
 
   const handleSaveMember = (memberToSave: FamilyMember) => {
     let newMembers: FamilyMember[];
