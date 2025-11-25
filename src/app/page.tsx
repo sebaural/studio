@@ -17,7 +17,9 @@ export default function Home() {
   const { toast } = useToast();
 
   const handleSaveMember = (memberToSave: FamilyMember) => {
-    const newMembers = ((prevMembers) => {
+    let newMembers: FamilyMember[];
+
+    setMembers((prevMembers) => {
       const updatedMembers = [...prevMembers];
       const existingMemberIndex = updatedMembers.findIndex((m) => m.id === memberToSave.id);
   
@@ -112,14 +114,15 @@ export default function Home() {
           }
         });
   
-        return updatedMembers;
-      })(members);
-
-      setMembers(newMembers);
+        newMembers = updatedMembers;
+        return newMembers;
+      });
 
       startSaving(async () => {
         const result = await saveFamilyMembers(newMembers);
-        if (!result.success) {
+        if (result.success) {
+          setAddMemberOpen(false);
+        } else {
           toast({
             title: 'Error Saving Data',
             description: result.error,
@@ -127,10 +130,6 @@ export default function Home() {
           });
         }
       });
-
-
-    setEditingMember(memberToSave);
-    setAddMemberOpen(false);
   };
   
   const handleAddMember = () => {
