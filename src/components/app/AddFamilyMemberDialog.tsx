@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format, parse, parseISO, isValid } from 'date-fns';
-import { CalendarIcon, UserPlus, XIcon } from 'lucide-react';
+import { CalendarIcon, UserPlus, XIcon, Loader2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -56,6 +56,7 @@ type AddFamilyMemberDialogProps = {
   onSave: (member: FamilyMember) => void;
   existingMember?: FamilyMember;
   allMembers: FamilyMember[];
+  isSaving: boolean;
 };
 
 export default function AddFamilyMemberDialog({
@@ -64,6 +65,7 @@ export default function AddFamilyMemberDialog({
   onSave,
   existingMember,
   allMembers,
+  isSaving,
 }: AddFamilyMemberDialogProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -377,7 +379,9 @@ export default function AddFamilyMemberDialog({
               <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>
-              <Button type="submit">Save Member</Button>
+              <Button type="submit" disabled={isSaving}>
+                {isSaving ? <><Loader2 className="animate-spin" /> Saving...</> : 'Save Member'}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

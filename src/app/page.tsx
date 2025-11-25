@@ -1,33 +1,37 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import type { FamilyMember } from '@/lib/types';
 import Header from '@/components/app/Header';
 import FamilyTree from '@/components/app/FamilyTree';
 import AddFamilyMemberDialog from '@/components/app/AddFamilyMemberDialog';
 import { initialMembers } from '@/lib/initial-data';
+import { saveFamilyMembers } from './actions';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Home() {
   const [members, setMembers] = useState<FamilyMember[]>(initialMembers);
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<FamilyMember | undefined>(undefined);
+  const [isSaving, startSaving] = useTransition();
+  const { toast } = useToast();
 
   const handleSaveMember = (memberToSave: FamilyMember) => {
-    setMembers((prevMembers) => {
-      const newMembers = [...prevMembers];
-      const existingMemberIndex = newMembers.findIndex((m) => m.id === memberToSave.id);
+    const newMembers = ((prevMembers) => {
+      const updatedMembers = [...prevMembers];
+      const existingMemberIndex = updatedMembers.findIndex((m) => m.id === memberToSave.id);
   
         const oldMember =
           existingMemberIndex > -1
-            ? newMembers[existingMemberIndex]
+            ? updatedMembers[existingMemberIndex]
             : undefined;
   
         if (existingMemberIndex > -1) {
           // Update existing member
-          newMembers[existingMemberIndex] = memberToSave;
+          updatedMembers[existingMemberIndex] = memberToSave;
         } else {
           // Add new member
-          newMembers.push(memberToSave);
+          updatedMembers.push(memberToSave);
         }
   
         // --- Handle relationship updates ---
@@ -38,10 +42,10 @@ export default function Home() {
   
         // Clear old spouse's spouse field if it's changed
         if (oldSpouseId && oldSpouseId !== newSpouseId) {
-          const oldSpouseIndex = newMembers.findIndex((m) => m.id === oldSpouseId);
+          const oldSpouseIndex = updatedMembers.findIndex((m) => m.id === oldSpouseId);
           if (oldSpouseIndex > -1) {
-            newMembers[oldSpouseIndex] = {
-              ...newMembers[oldSpouseIndex],
+            updatedMembers[oldSpouseIndex] = {
+              ...updatedMembers[oldSpouseIndex],
               spouse: undefined,
             };
           }
@@ -49,26 +53,26 @@ export default function Home() {
   
         // Set new spouse's spouse field
         if (newSpouseId) {
-          const newSpouseIndex = newMembers.findIndex((m) => m.id === newSpouseId);
+          const newSpouseIndex = updatedMembers.findIndex((m) => m.id === newSpouseId);
           if (newSpouseIndex > -1) {
             // Unset the new spouse's current partner if they have one
-            const newSpousesCurrentPartnerId = newMembers[newSpouseIndex].spouse;
+            const newSpousesCurrentPartnerId = updatedMembers[newSpouseIndex].spouse;
             if (
               newSpousesCurrentPartnerId &&
               newSpousesCurrentPartnerId !== memberToSave.id
             ) {
-              const partnerIndex = newMembers.findIndex(
+              const partnerIndex = updatedMembers.findIndex(
                 (m) => m.id === newSpousesCurrentPartnerId
               );
               if (partnerIndex > -1) {
-                newMembers[partnerIndex] = {
-                  ...newMembers[partnerIndex],
+                updatedMembers[partnerIndex] = {
+                  ...updatedMembers[partnerIndex],
                   spouse: undefined,
                 };
               }
             }
-            newMembers[newSpouseIndex] = {
-              ...newMembers[newSpouseIndex],
+            updatedMembers[newSpouseIndex] = {
+              ...updatedMembers[newSpouseIndex],
               spouse: memberToSave.id,
             };
           }
@@ -83,33 +87,47 @@ export default function Home() {
   
         // Add child to new parents
         addedParents.forEach((pId) => {
-          const parentIndex = newMembers.findIndex((m) => m.id === pId);
+          const parentIndex = updatedMembers.findIndex((m) => m.id === pId);
           if (
             parentIndex > -1 &&
-            !newMembers[parentIndex].children.includes(memberToSave.id)
+            !updatedMembers[parentIndex].children.includes(memberToSave.id)
           ) {
-            newMembers[parentIndex] = {
-              ...newMembers[parentIndex],
-              children: [...newMembers[parentIndex].children, memberToSave.id],
+            updatedMembers[parentIndex] = {
+              ...updatedMembers[parentIndex],
+              children: [...updatedMembers[parentIndex].children, memberToSave.id],
             };
           }
         });
   
         // Remove child from old parents
         removedParents.forEach((pId) => {
-          const parentIndex = newMembers.findIndex((m) => m.id === pId);
+          const parentIndex = updatedMembers.findIndex((m) => m.id === pId);
           if (parentIndex > -1) {
-            newMembers[parentIndex] = {
-              ...newMembers[parentIndex],
-              children: newMembers[parentIndex].children.filter(
+            updatedMembers[parentIndex] = {
+              ...updatedMembers[parentIndex],
+              children: updatedMembers[parentIndex].children.filter(
                 (cId) => cId !== memberToSave.id
               ),
             };
           }
         });
   
-        return newMembers;
+        return updatedMembers;
+      })(members);
+
+      setMembers(newMembers);
+
+      startSaving(async () => {
+        const result = await saveFamilyMembers(newMembers);
+        if (!result.success) {
+          toast({
+            title: 'Error Saving Data',
+            description: result.error,
+            variant: 'destructive',
+          });
+        }
       });
+
 
     setEditingMember(memberToSave);
     setAddMemberOpen(false);
@@ -142,6 +160,7 @@ export default function Home() {
         onSave={handleSaveMember}
         existingMember={editingMember}
         allMembers={members}
+        isSaving={isSaving}
       />
     </div>
   );
