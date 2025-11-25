@@ -18,7 +18,9 @@ export default function LanguageSwitcher() {
   const pathname = usePathname();
 
   const switchLanguage = (nextLocale: string) => {
-    router.replace(pathname, { locale: nextLocale });
+    // This is the correct way to switch locales with the App Router
+    const newPath = pathname.replace(`/${locale}`, `/${nextLocale}`);
+    router.replace(newPath);
   };
 
   return (
