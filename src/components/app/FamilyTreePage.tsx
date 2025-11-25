@@ -17,9 +17,9 @@ export default function FamilyTreePage() {
   const getTranslatedMembers = () => {
     return staticInitialMembers.map(member => ({
       ...member,
-      name: t.rich(member.id + '.name' as any, {}),
-      birthplace: t.rich(member.id + '.birthplace' as any, {}),
-      bio: t.rich(member.id + '.bio' as any, {}),
+      name: t(member.id + '.name' as any),
+      birthplace: t(member.id + '.birthplace' as any),
+      bio: t(member.id + '.bio' as any),
     }));
   };
   

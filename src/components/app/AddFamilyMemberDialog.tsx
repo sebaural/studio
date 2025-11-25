@@ -115,8 +115,10 @@ export default function AddFamilyMemberDialog({
       id: existingMember?.id || new Date().toISOString() + Math.random(),
       ...values,
       spouse: values.spouse || undefined,
-      birthDate: format(values.birthDate, 'yyyy-MM-dd'),
-      deathDate: values.deathDate ? format(values.deathDate, 'yyyy-MM-dd') : undefined,
+      birthDate: format(values.birthDate as Date, 'yyyy-MM-dd'),
+      deathDate: values.deathDate ? format(values.deathDate as Date, 'yyyy-MM-dd') : undefined,
+      bio: values.bio ?? '',
+      parents: values.parents ?? [],
       photoHint: photoData?.imageHint || 'person',
       children: existingMember?.children || [],
     };
@@ -178,7 +180,7 @@ export default function AddFamilyMemberDialog({
                   </FormItem>
                 )}
               />
-              <FormField
+                  <FormField
                 control={form.control}
                 name="birthDate"
                 render={({ field }) => (
@@ -188,13 +190,20 @@ export default function AddFamilyMemberDialog({
                       <FormControl>
                         <Input
                           placeholder="yyyy-mm-dd"
-                          value={field.value instanceof Date && isValid(field.value) ? format(field.value, 'yyyy-MM-dd') : field.value || ''}
+                          value={
+                            field.value instanceof Date && isValid(field.value)
+                              ? format(field.value, 'yyyy-MM-dd')
+                              : typeof field.value === 'string'
+                              ? field.value
+                              : ''
+                          }
                           onChange={(e) => {
                             const date = parse(e.target.value, 'yyyy-MM-dd', new Date());
                             if (isValid(date)) {
-                              field.onChange(date);
+                              // cast to any because form schema expects a Date
+                              field.onChange(date as any);
                             } else {
-                               field.onChange(e.target.value);
+                              field.onChange(e.target.value as any);
                             }
                           }}
                         />
@@ -210,13 +219,13 @@ export default function AddFamilyMemberDialog({
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value instanceof Date && isValid(field.value) ? field.value : undefined}
-                            onSelect={field.onChange}
-                            disabled={(date) => date > new Date() || date < new Date('1700-01-01')}
-                            initialFocus
-                          />
+                            <Calendar
+                              mode="single"
+                              selected={field.value instanceof Date && isValid(field.value) ? field.value : undefined}
+                              onSelect={(d) => field.onChange(d as any)}
+                              disabled={(date) => date > new Date() || date < new Date('1700-01-01')}
+                              initialFocus
+                            />
                         </PopoverContent>
                       </Popover>
                     </div>
@@ -234,13 +243,19 @@ export default function AddFamilyMemberDialog({
                       <FormControl>
                         <Input
                           placeholder="yyyy-mm-dd"
-                          value={field.value instanceof Date && isValid(field.value) ? format(field.value, 'yyyy-MM-dd') : field.value || ''}
+                          value={
+                            field.value instanceof Date && isValid(field.value)
+                              ? format(field.value, 'yyyy-MM-dd')
+                              : typeof field.value === 'string'
+                              ? field.value
+                              : ''
+                          }
                           onChange={(e) => {
                             const date = parse(e.target.value, 'yyyy-MM-dd', new Date());
                             if (isValid(date)) {
-                              field.onChange(date);
+                              field.onChange(date as any);
                             } else {
-                               field.onChange(e.target.value);
+                              field.onChange(e.target.value as any);
                             }
                           }}
                         />
@@ -259,7 +274,7 @@ export default function AddFamilyMemberDialog({
                           <Calendar
                             mode="single"
                             selected={field.value instanceof Date && isValid(field.value) ? field.value : undefined}
-                            onSelect={field.onChange}
+                            onSelect={(d) => field.onChange(d as any)}
                             disabled={(date) => date > new Date() || date < new Date('1700-01-01')}
                             initialFocus
                           />

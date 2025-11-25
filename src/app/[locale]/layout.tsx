@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import '../globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import {NextIntlClientProvider, useMessages} from 'next-intl';
+import {NextIntlClientProvider} from 'next-intl';
 import {unstable_setRequestLocale} from 'next-intl/server';
 
 export const metadata: Metadata = {
@@ -9,15 +9,16 @@ export const metadata: Metadata = {
   description: 'Create and explore your family tree with AI-powered historical insights.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-  params: {locale}
+  params,
 }: Readonly<{
   children: React.ReactNode;
-  params: {locale: string};
+  params: Promise<{locale: string}>;
 }>) {
+  const { locale } = await params;
   unstable_setRequestLocale(locale);
-  const messages = useMessages();
+  const messages = (await import(`../../../messages/${locale}.json`)).default;
 
   return (
     <html lang={locale} className="dark">

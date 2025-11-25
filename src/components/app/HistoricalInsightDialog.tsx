@@ -52,9 +52,9 @@ export default function HistoricalInsightDialog({ member }: HistoricalInsightDia
       });
 
       if (result.success) {
-        setInsight(result.data);
+        setInsight(result.data ?? null);
       } else {
-        setError(result.error);
+        setError(result.error ?? null);
       }
     });
   };

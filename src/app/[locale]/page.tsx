@@ -1,14 +1,13 @@
-import {useTranslations} from 'next-intl';
 import {unstable_setRequestLocale} from 'next-intl/server';
 import FamilyTreePage from '@/components/app/FamilyTreePage';
- 
+
 type Props = {
-  params: {locale: string};
+  params: Promise<{locale: string}>;
 };
 
-export default function Home({params: {locale}}: Props) {
+export default async function Home({ params }: Props) {
+  const { locale } = await params;
   unstable_setRequestLocale(locale);
-  const t = useTranslations('Home');
 
   return <FamilyTreePage />;
 }

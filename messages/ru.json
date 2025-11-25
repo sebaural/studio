@@ -1,7 +1,7 @@
 {
   "Header": {
     "title": "Центр Наследия",
-    "addMember": "Добавить члена"
+    "addMember": "Добавить"
   },
   "LanguageSwitcher": {
     "toggle": "Переключить на {locale, select, ru {русский} other {английский}}",
