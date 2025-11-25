@@ -16,6 +16,7 @@ const HistoricalContextInputSchema = z.object({
   birthDate: z.string().describe('The birth date of the family member (YYYY-MM-DD).'),
   birthplace: z.string().describe('The birthplace of the family member.'),
   biography: z.string().optional().describe('A short biography of the family member.'),
+  locale: z.string().describe('The locale for the response language (e.g., "en", "ru").'),
 });
 
 export type HistoricalContextInput = z.infer<typeof HistoricalContextInputSchema>;
@@ -37,7 +38,7 @@ const historicalContextPrompt = ai.definePrompt({
   name: 'historicalContextPrompt',
   input: {schema: HistoricalContextInputSchema},
   output: {schema: HistoricalContextOutputSchema},
-  prompt: `Provide historical context and insights related to the following family member:
+  prompt: `Provide historical context and insights related to the following family member in the "{{locale}}" language:
 
 Name: {{{name}}}
 Birth Date: {{{birthDate}}}

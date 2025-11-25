@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { Sparkles, Loader2, AlertTriangle, HelpCircle, Landmark, BookOpen } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import type { FamilyMember, HistoricalInsight } from '@/lib/types';
 import { getHistoricalContext } from '@/app/actions';
 
@@ -24,6 +24,7 @@ type HistoricalInsightDialogProps = {
 
 export default function HistoricalInsightDialog({ member }: HistoricalInsightDialogProps) {
   const t = useTranslations('HistoricalInsightDialog');
+  const locale = useLocale();
   const [isOpen, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [insight, setInsight] = useState<HistoricalInsight | null>(null);
@@ -32,7 +33,7 @@ export default function HistoricalInsightDialog({ member }: HistoricalInsightDia
   const handleOpenChange = (open: boolean) => {
     setOpen(open);
     if (open) {
-      // Reset state when dialog is opened to ensure fresh data is fetched
+      // Reset state when dialog is opened
       setInsight(null);
       setError(null);
     }
@@ -47,6 +48,7 @@ export default function HistoricalInsightDialog({ member }: HistoricalInsightDia
         birthDate: member.birthDate,
         birthplace: member.birthplace,
         biography: member.bio,
+        locale: locale,
       });
 
       if (result.success) {
