@@ -6,7 +6,8 @@
   "LanguageSwitcher": {
     "toggle": "Switch to {locale, select, ru {Russian} other {English}}",
     "en": "EN",
-    "ru": "RU"
+    "ru": "RU",
+    "language": "Language"
   },
   "FamilyTree": {
     "noMembersTitle": "No Family Members",

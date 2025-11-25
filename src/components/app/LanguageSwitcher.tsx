@@ -28,8 +28,13 @@ export default function LanguageSwitcher() {
       // The current path has a locale prefix, so we replace it
       newPath = pathname.replace(currentLocalePrefix, `/${nextLocale}`);
     } else {
-      // The current path is for the default locale (no prefix), so we add one
-      newPath = `/${nextLocale}${pathname}`;
+      // Handle the root case for the default locale
+      if (pathname === '/') {
+        newPath = `/${nextLocale}`;
+      } else {
+        // The current path is for the default locale (no prefix), so we add one
+        newPath = `/${nextLocale}${pathname}`;
+      }
     }
 
     router.replace(newPath);
@@ -38,9 +43,9 @@ export default function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
-          <Languages className="h-5 w-5" />
-          <span className="sr-only">{t('toggle', { locale: locale === 'en' ? 'ru' : 'en' })}</span>
+        <Button variant="ghost">
+          {t('language')}
+          <Languages className="h-4 w-4 ml-2 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
