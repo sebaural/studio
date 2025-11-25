@@ -51,14 +51,15 @@ export const initialMembers: FamilyMember[] = [
   },
   {
     "id": "4",
-    "name": "Jane Doe",
+    "name": "Valentina Slizh",
     "birthDate": "1952-02-20",
-    "birthplace": "New York, USA",
+    "deathDate": "2018-03-01",
+    "birthplace": "Zaporozhie, Ukrane",
     "bio": "A journalist who traveled the world, Jane had a passion for storytelling and photography.",
     "photoUrl": "https://picsum.photos/seed/heritage4/400/400",
-    "photoHint": "woman 1950s",
     "parents": [],
     "spouse": "3",
+    "photoHint": "person",
     "children": [
       "5"
     ]
