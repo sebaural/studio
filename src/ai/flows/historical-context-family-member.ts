@@ -31,7 +31,20 @@ const HistoricalContextOutputSchema = z.object({
 export type HistoricalContextOutput = z.infer<typeof HistoricalContextOutputSchema>;
 
 export async function historicalContextForFamilyMember(input: HistoricalContextInput): Promise<HistoricalContextOutput> {
-  return historicalContextFlow(input);
+  try {
+    return await historicalContextFlow(input);
+  } catch (error) {
+    // If the AI provider is not configured or an error occurs, return a safe fallback
+    // so the UI can present useful information instead of an unexpected error.
+    console.error('historicalContextForFamilyMember failed:', error);
+    const fallback: HistoricalContextOutput = {
+      nameMeaning: `No name-meaning available for ${input.name}.`,
+      historicalEvents: `Historical context is not available — the AI service may be unconfigured or temporarily unavailable.`,
+      birthplaceInformation: `No birthplace information is available for ${input.birthplace}.`,
+      additionalInsights: `Try configuring an AI provider or check network settings to enable historical insights.`,
+    };
+    return fallback;
+  }
 }
 
 const historicalContextPrompt = ai.definePrompt({
@@ -62,7 +75,7 @@ const historicalContextFlow = ai.defineFlow(
     inputSchema: HistoricalContextInputSchema,
     outputSchema: HistoricalContextOutputSchema,
   },
-  async input => {
+  async (input: HistoricalContextInput) => {
     const {output} = await historicalContextPrompt(input);
     return output!;
   }

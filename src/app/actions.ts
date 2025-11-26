@@ -13,7 +13,18 @@ export async function getHistoricalContext(input: HistoricalContextInput) {
     return { success: true, data: result };
   } catch (error) {
     console.error('Error getting historical context:', error);
-    // It's better to return a generic error message to the client
+    // If the error indicates the AI provider is unconfigured, return a
+    // helpful message instructing the developer how to enable it.
+    const msg = (error && (error as any).message) || '';
+    if (/GEMINI_API_KEY|GOOGLE_API_KEY|API key|AI provider not configured/i.test(msg)) {
+      return {
+        success: false,
+        error:
+          'Historical insights are unavailable because the AI provider is not configured. Set the environment variable `GEMINI_API_KEY` or `GOOGLE_API_KEY` to enable this feature.',
+      };
+    }
+
+    // Fallback generic message for other unexpected errors.
     return { success: false, error: 'An unexpected error occurred while fetching historical insights. Please try again later.' };
   }
 }
