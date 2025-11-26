@@ -18,11 +18,15 @@ type FamilyNodeProps = {
   allMembers: Map<string, FamilyMember>;
   onEditMember: (member: FamilyMember) => void;
   level: number;
+  primary: Set<string>;
 };
 
-const FamilyNode: React.FC<FamilyNodeProps> = ({ memberId, allMembers, onEditMember, level }) => {
+const FamilyNode: React.FC<FamilyNodeProps> = ({ memberId, allMembers, onEditMember, level, primary }) => {
   const member = allMembers.get(memberId);
   if (!member) return null;
+
+  // Only render this node if it's the primary location for this member
+  if (!primary.has(member.id)) return null;
 
   const spouse = member.spouse ? allMembers.get(member.spouse) : null;
   const children = member.children.filter(childId => allMembers.has(childId));
@@ -51,7 +55,7 @@ const FamilyNode: React.FC<FamilyNodeProps> = ({ memberId, allMembers, onEditMem
           <>
             <div className="absolute top-1/2 left-full w-4 h-0.5 bg-border -translate-y-1/2" />
             <div className="absolute top-1/2 right-full w-4 h-0.5 bg-border -translate-y-1/2" />
-            <FamilyMemberCard member={spouse} onEdit={onEditMember} />
+            {primary.has(spouse.id) && <FamilyMemberCard member={spouse} onEdit={onEditMember} />}
           </>
         )}
       </div>
@@ -68,6 +72,7 @@ const FamilyNode: React.FC<FamilyNodeProps> = ({ memberId, allMembers, onEditMem
                   allMembers={allMembers}
                   onEditMember={onEditMember}
                   level={level + 1}
+                  primary={primary}
                 />
               </div>
             ))}
@@ -115,17 +120,42 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({ members, onEditMember }) => {
     <div className="w-full h-full overflow-x-auto py-10">
       <div className="flex justify-center">
         <div className="flex flex-col items-center gap-12">
-           <AnimatePresence>
-            {rootNodes.map((root) => (
-              <motion.div key={root.id} initial="hidden" animate="visible" exit="hidden">
-                <FamilyNode
-                  memberId={root.id}
-                  allMembers={membersMap}
-                  onEditMember={onEditMember}
-                  level={0}
-                />
-              </motion.div>
-            ))}
+          <AnimatePresence>
+            {(() => {
+              // Compute primary render locations deterministically (first-encounter DFS)
+              // To avoid rendering multiple duplicate family sets, pick a single root
+              // (deterministically the first root) and traverse from it only.
+              const primary = new Set<string>();
+              const dfs = (id: string) => {
+                if (!id || primary.has(id) || !membersMap.has(id)) return;
+                primary.add(id);
+                const m = membersMap.get(id)!;
+                if (m.spouse) dfs(m.spouse);
+                m.children.forEach(dfs);
+              };
+
+              if (rootNodes.length > 0) {
+                dfs(rootNodes[0].id);
+              }
+
+              const primaryRoots = rootNodes.length > 0 ? [rootNodes[0]] : [];
+
+              return (
+                <motion.div className="family-set">
+                  {primaryRoots.map((root) => (
+                    <motion.div key={root.id} initial="hidden" animate="visible" exit="hidden">
+                      <FamilyNode
+                        memberId={root.id}
+                        allMembers={membersMap}
+                        onEditMember={onEditMember}
+                        level={0}
+                        primary={primary}
+                      />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              );
+            })()}
           </AnimatePresence>
         </div>
       </div>

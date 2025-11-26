@@ -1,0 +1,33 @@
+
+> nextn@0.1.0 build
+> NODE_ENV=production next build
+
+   ▲ Next.js 15.3.3
+
+   Creating an optimized production build ...
+
+[next-intl] Reading request configuration from ./src/i18n.ts is deprecated, please see https://next-intl.dev/blog/next-intl-3-22#i18n-request — you can either move your configuration to ./i18n/request.ts or provide a custom path in your Next.js config:
+
+const withNextIntl = createNextIntlPlugin(
+  './path/to/i18n/request.tsx'
+);
+
+ ✓ Compiled successfully in 36.0s
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+   Generating static pages (0/5) ...
+Error occurred prerendering page "/". Read more: https://nextjs.org/docs/messages/prerender-error
+Error: 
+    at /home/sevomax/studio/.next/server/chunks/873.js:103:62498
+    at e0 (/home/sevomax/studio/.next/server/chunks/10.js:19:39289)
+    at nF (/home/sevomax/studio/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:46843)
+    at nH (/home/sevomax/studio/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:48618)
+    at nH (/home/sevomax/studio/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:64688)
+    at nW (/home/sevomax/studio/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:67762)
+    at nz (/home/sevomax/studio/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:65337)
+    at nW (/home/sevomax/studio/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:68001)
+    at n3 (/home/sevomax/studio/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:75675)
+    at /home/sevomax/studio/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:44287
+Export encountered an error on /page: /, exiting the build.
+ ⨯ Next.js build worker exited with code: 1 and signal: null

@@ -1,0 +1,194 @@
+nohup: ignoring input
+
+> nextn@0.1.0 dev
+> next dev --turbopack --port 9002 --hostname 0.0.0.0
+
+
+[next-intl] Reading request configuration from ./src/i18n.ts is deprecated, please see https://next-intl.dev/blog/next-intl-3-22#i18n-request — you can either move your configuration to ./i18n/request.ts or provide a custom path in your Next.js config:
+
+const withNextIntl = createNextIntlPlugin(
+  './path/to/i18n/request.tsx'
+);
+
+   ▲ Next.js 15.3.3 (Turbopack)
+   - Local:        http://localhost:9002
+   - Network:      http://0.0.0.0:9002
+   - Experiments (use with caution):
+     · turbo
+
+ ✓ Starting...
+ ⚠ The config property `experimental.turbo` is deprecated. Move this setting to `config.turbopack` as Turbopack is now stable.
+ ○ Compiling middleware ...
+ ✓ Compiled middleware in 855ms
+ ✓ Ready in 2.6s
+ ○ Compiling /[locale] ...
+ ✓ Compiled /[locale] in 21s
+ GET / 200 in 24687ms
+ GET / 200 in 586ms
+ ✓ Compiled in 757ms
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 2.9s
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/static/development/_buildManifest.js.tmp.cqbeh9awbd'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/static/development/_buildManifest.js.tmp.cqbeh9awbd'
+}
+[Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/static/development/_buildManifest.js.tmp.qhfo6xeyes9'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/static/development/_buildManifest.js.tmp.qhfo6xeyes9'
+}
+[Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/static/development/_buildManifest.js.tmp.f9eldhd9y3j'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/static/development/_buildManifest.js.tmp.f9eldhd9y3j'
+}
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 984ms
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/static/development/_buildManifest.js.tmp.2v4emfhac4'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/static/development/_buildManifest.js.tmp.2v4emfhac4'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/app/favicon.ico/[__metadata_id__]/route/app-paths-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/app/favicon.ico/[__metadata_id__]/route/app-paths-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/app/[locale]/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sevomax/studio/.next/server/pages/_app/build-manifest.json'
+}

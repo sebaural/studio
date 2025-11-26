@@ -1,12 +1,12 @@
 import {unstable_setRequestLocale} from 'next-intl/server';
-import FamilyTreePage from '@/components/app/FamilyTreePage';
+import FamilyTreeClientWrapper from '@/components/app/FamilyTreeClientWrapper';
 
 type Props = {
-  params: {locale: string};
+  params: Promise<{ locale: string }> | { locale: string };
 };
 
-export default function Home({params: {locale}}: Props) {
+export default async function Home({ params }: Props) {
+  const { locale } = (params as Promise<{ locale: string }>) instanceof Promise ? await params : (params as { locale: string });
   unstable_setRequestLocale(locale);
-
-  return <FamilyTreePage />;
+    return <FamilyTreeClientWrapper />;
 }
