@@ -69,11 +69,11 @@ export const initialMembers: FamilyMember[] = [
     "birthplace": "Chelyabinsk, Russia",
     "bio": "A software developer and amateur musician, Sarah carries on her family's legacy of creativity.",
     "photoUrl": "https://picsum.photos/seed/heritage6/400/400",
-    "photoHint": "person",
     "parents": [
       "1",
       "2"
     ],
+    "photoHint": "person",
     "children": []
   }
 ];
