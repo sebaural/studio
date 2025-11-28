@@ -18,6 +18,10 @@ export default function FamilyTreePage({ initialMembers }: FamilyTreePageProps) 
   const t = useTranslations('FamilyMembers');
 
   const getTranslatedMembers = (members: FamilyMember[]) => {
+    // Ensure members is an array before mapping
+    if (!Array.isArray(members)) {
+        return [];
+    }
     return members.map((member) => {
       const translatedName = t(`${member.id}.name`);
       const hasTranslation = translatedName && translatedName !== `${member.id}.name`;

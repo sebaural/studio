@@ -9,13 +9,15 @@ import type { FamilyMember } from "@/lib/types";
 export default async function FamilyTreeServer() {
   const dataPath = path.join(process.cwd(), 'src', 'lib', 'initial-data.ts');
   
-  // This is a trick to bypass Next.js's caching of imports.
+  // This is a trick to bypass Next.js's caching of imports in dev mode.
   // By reading the file and using a dynamic function constructor,
   // we ensure we always get the latest version of the data.
   const fileContent = await fs.promises.readFile(dataPath, 'utf-8');
-  // Remove the import statement before evaluating
-  const cleanedContent = fileContent.replace(/import.*?;/g, '');
-  const members: FamilyMember[] = new Function(`${cleanedContent.replace('export const initialMembers: FamilyMember[] =', 'return ')}`)();
+  // Remove the import statement and export keyword before evaluating
+  const cleanedContent = fileContent
+    .replace(/import.*?;/gs, '')
+    .replace('export const initialMembers: FamilyMember[] =', '');
+  const members: FamilyMember[] = new Function(`return ${cleanedContent}`)();
 
   return <FamilyTreePage initialMembers={members} />;
 }
