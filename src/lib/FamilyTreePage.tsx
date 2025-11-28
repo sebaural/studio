@@ -137,9 +137,9 @@ export default function FamilyTreePage() {
         const newMember = {...member};
         
         if (originalData) {
-            newMember.name = originalData.name;
-            newMember.birthplace = originalData.birthplace;
-            newMember.bio = originalData.bio;
+          if (member.name === t(`${member.id}.name`)) newMember.name = originalData.name;
+          if (member.birthplace === t(`${member.id}.birthplace`)) newMember.birthplace = originalData.birthplace;
+          if (member.bio === t(`${member.id}.bio`)) newMember.bio = originalData.bio;
         }
 
         return newMember;
