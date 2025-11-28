@@ -42,7 +42,6 @@ export default function FamilyTreePage({ initialMembers }: FamilyTreePageProps) 
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<FamilyMember | undefined>(undefined);
   const [isSaving, startSaving] = useTransition();
-  const [treeKey, setTreeKey] = useState(Date.now());
   const { toast } = useToast();
   
   const handleSaveMember = (memberToSave: FamilyMember) => {
@@ -152,7 +151,6 @@ export default function FamilyTreePage({ initialMembers }: FamilyTreePageProps) 
         setMembers(newMembers); 
         setAddMemberOpen(false);
         setEditingMember(undefined);
-        setTreeKey(Date.now());
       } else {
         toast({
           title: 'Error Saving Data',
@@ -177,7 +175,7 @@ export default function FamilyTreePage({ initialMembers }: FamilyTreePageProps) 
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <Header onAddMember={handleAddMember} />
       <main className="flex-grow container mx-auto px-4 py-8">
-        <FamilyTree key={treeKey} members={members} onEditMember={handleEditMember} />
+        <FamilyTree members={members} onEditMember={handleEditMember} />
       </main>
       <AddFamilyMemberDialog
         isOpen={isAddMemberOpen}
