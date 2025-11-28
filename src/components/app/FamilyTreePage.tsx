@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useTransition, useMemo } from 'react';
@@ -9,20 +8,19 @@ import FamilyTree from '@/components/app/FamilyTree';
 import AddFamilyMemberDialog from '@/components/app/AddFamilyMemberDialog';
 import { saveFamilyMembers } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
-
-// Statically import the initial data and the English messages.
-import { initialMembers as staticInitialMembers } from '@/lib/initial-data';
 import enMessages from '../../../messages/en.json';
 
-export default function FamilyTreePage() {
+type FamilyTreePageProps = {
+  initialMembers: FamilyMember[];
+};
+
+export default function FamilyTreePage({ initialMembers }: FamilyTreePageProps) {
   const t = useTranslations('FamilyMembers');
 
-  // useMemo will re-run when the staticInitialMembers reference changes (due to hot-reload)
-  const getTranslatedMembers = () => {
-    return staticInitialMembers.map((member: FamilyMember) => {
-      // Use the translation if it exists, otherwise use the member's default name.
+  const getTranslatedMembers = (members: FamilyMember[]) => {
+    return members.map((member) => {
       const translatedName = t(`${member.id}.name`);
-      const hasTranslation = translatedName !== `${member.id}.name` && translatedName !== '';
+      const hasTranslation = translatedName && translatedName !== `${member.id}.name`;
 
       if (hasTranslation) {
         return {
@@ -36,11 +34,11 @@ export default function FamilyTreePage() {
     });
   };
 
-  const [members, setMembers] = useState<FamilyMember[]>(getTranslatedMembers());
+  const [members, setMembers] = useState<FamilyMember[]>(() => getTranslatedMembers(initialMembers));
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<FamilyMember | undefined>(undefined);
   const [isSaving, startSaving] = useTransition();
-  const [treeKey, setTreeKey] = useState(Date.now()); // Add a key for re-rendering the tree
+  const [treeKey, setTreeKey] = useState(Date.now());
   const { toast } = useToast();
   
   const handleSaveMember = (memberToSave: FamilyMember) => {
@@ -150,7 +148,7 @@ export default function FamilyTreePage() {
         setMembers(newMembers); 
         setAddMemberOpen(false);
         setEditingMember(undefined);
-        setTreeKey(Date.now()); // Force re-render of the tree
+        setTreeKey(Date.now());
       } else {
         toast({
           title: 'Error Saving Data',
