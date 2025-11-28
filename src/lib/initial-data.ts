@@ -64,9 +64,9 @@ export const initialMembers: FamilyMember[] = [
   },
   {
     "id": "5",
-    "name": "Sarah Smith",
+    "name": "Galina Semyonovna Scherbina",
     "birthDate": "1980-07-10",
-    "birthplace": "New York, USA",
+    "birthplace": "Chelyabinsk, Russia",
     "bio": "A software developer and amateur musician, Sarah carries on her family's legacy of creativity.",
     "photoUrl": "https://picsum.photos/seed/heritage6/400/400",
     "photoHint": "woman 1980s",
