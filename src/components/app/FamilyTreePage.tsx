@@ -149,25 +149,28 @@ export default function FamilyTreePage() {
       const membersToSave = newMembers.map(member => {
         // Find original English data from the messages file, if it exists.
         const originalData = enMessages.FamilyMembers[member.id];
-        
-        // If there's no original data, it's a new member, so save all fields as is.
-        if (!originalData) {
-          return member;
+        const newMember = {...member};
+
+        if (originalData) {
+            newMember.name = originalData.name;
+            newMember.birthplace = originalData.birthplace;
+            newMember.bio = originalData.bio;
+        }
+
+        // If the user has edited the fields, use the edited values.
+        if (member.name !== t(`${member.id}.name`)) {
+            newMember.name = member.name;
+        }
+        if (member.birthplace !== t(`${member.id}.birthplace`)) {
+            newMember.birthplace = member.birthplace;
+        }
+        if (member.bio !== t(`${member.id}.bio`)) {
+            newMember.bio = member.bio;
         }
         
-        // Find the current translated version to compare against for edits.
-        const translatedMember = getTranslatedMembers().find(tm => tm.id === member.id);
-        
-        // If there's original data, we use it as the base, unless the
-        // current value in the UI is different, which means the user has edited it.
-        return {
-          ...member,
-          name: (member.name !== translatedMember?.name) ? member.name : originalData.name,
-          birthplace: (member.birthplace !== translatedMember?.birthplace) ? member.birthplace : originalData.birthplace,
-          bio: (member.bio !== translatedMember?.bio) ? member.bio : originalData.bio,
-        };
+        return newMember;
       });
-
+      
       const result = await saveFamilyMembers(membersToSave);
       if (result.success) {
         setMembers(newMembers); // Update UI state after successful save
