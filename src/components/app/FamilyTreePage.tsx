@@ -1,24 +1,23 @@
-
 'use client';
 
-import { useState, useTransition, useEffect } from 'react';
-import { useTranslations, useLocale } from 'next-intl';
+import { useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 import type { FamilyMember } from '@/lib/types';
 import Header from '@/components/app/Header';
 import FamilyTree from '@/components/app/FamilyTree';
 import AddFamilyMemberDialog from '@/components/app/AddFamilyMemberDialog';
-import { initialMembers as staticInitialMembers } from '@/lib/initial-data';
 import { saveFamilyMembers } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 
+// Dynamically require `initial-data` to bypass Next.js module cache in dev mode.
+// This ensures that the latest data is loaded from the file on each render.
+const { initialMembers: staticInitialMembers } = require('@/lib/initial-data');
+
 export default function FamilyTreePage() {
   const t = useTranslations('FamilyMembers');
-  const locale = useLocale();
 
   const getTranslatedMembers = () => {
-    return staticInitialMembers.map(member => {
-      // Check if a translation exists for this member's name.
-      // The `t` function returns the key if the translation is not found.
+    return staticInitialMembers.map((member: FamilyMember) => {
       const translatedName = t(`${member.id}.name`);
       const hasTranslation = translatedName !== `${member.id}.name`;
 
@@ -30,23 +29,16 @@ export default function FamilyTreePage() {
           bio: t(`${member.id}.bio`),
         };
       }
-      // If no translation exists, return the member as is.
-      // This handles newly added members that don't have i18n keys yet.
       return member;
     });
   };
-  
+
   const [members, setMembers] = useState<FamilyMember[]>(getTranslatedMembers());
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<FamilyMember | undefined>(undefined);
   const [isSaving, startSaving] = useTransition();
   const { toast } = useToast();
-
-  useEffect(() => {
-    setMembers(getTranslatedMembers());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locale]);
-
+  
   const handleSaveMember = (memberToSave: FamilyMember) => {
     let newMembers: FamilyMember[];
 
@@ -151,11 +143,7 @@ export default function FamilyTreePage() {
 
       startSaving(async () => {
         const membersToSave = newMembers.map(m => {
-          const staticMember = staticInitialMembers.find(sm => sm.id === m.id);
-          
-          // If it's a new member or an existing member that is not in the english translation file.
-          // The name, birthplace, and bio will come from the form.
-          // Otherwise, we use the original english version for i18n to work.
+          const staticMember = staticInitialMembers.find((sm: FamilyMember) => sm.id === m.id);
           const isTranslated = staticMember && t(`${m.id}.name`) !== `${m.id}.name`;
 
           return {
@@ -219,5 +207,3 @@ export default function FamilyTreePage() {
     </div>
   );
 }
-
-    
