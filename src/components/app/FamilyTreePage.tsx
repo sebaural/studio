@@ -36,7 +36,7 @@ export default function FamilyTreePage({ initialMembers }: FamilyTreePageProps) 
       return member;
     });
   }, [initialMembers, t]);
-
+  
   const [members, setMembers] = useState<FamilyMember[]>(translatedMembers);
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<FamilyMember | undefined>(undefined);

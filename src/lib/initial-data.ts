@@ -39,7 +39,7 @@ export const initialMembers: FamilyMember[] = [
     "birthDate": "1950-11-01",
     "deathDate": "2024-03-15",
     "birthplace": "Chelyabinsk, Russia",
-    "bio": "An architect who loved to sail. He designed several notable buildings in his city.",
+    "bio": "Engineer",
     "photoUrl": "https://picsum.photos/seed/heritage3/400/400",
     "photoHint": "person",
     "parents": [
