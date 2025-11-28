@@ -9,9 +9,9 @@ export const initialMembers: FamilyMember[] = [
     "birthplace": "Slizhi, Belarus",
     "bio": "A veteran of World War II, John was a carpenter by trade and a loving grandfather.",
     "photoUrl": "https://picsum.photos/seed/heritage1/400/400",
+    "photoHint": "person",
     "parents": [],
     "spouse": "2",
-    "photoHint": "person",
     "children": [
       "3",
       "5"
@@ -25,9 +25,9 @@ export const initialMembers: FamilyMember[] = [
     "birthplace": "Izhevsk, Russia",
     "bio": "Mary was a school teacher known for her kindness and delicious apple pies.",
     "photoUrl": "https://picsum.photos/seed/heritage2/400/400",
+    "photoHint": "person",
     "parents": [],
     "spouse": "1",
-    "photoHint": "person",
     "children": [
       "3",
       "5"
@@ -41,12 +41,12 @@ export const initialMembers: FamilyMember[] = [
     "birthplace": "Chelyabinsk, Russia",
     "bio": "An architect who loved to sail. He designed several notable buildings in his city.",
     "photoUrl": "https://picsum.photos/seed/heritage3/400/400",
+    "photoHint": "person",
     "parents": [
       "1",
       "2"
     ],
     "spouse": "4",
-    "photoHint": "person",
     "children": []
   },
   {
@@ -57,9 +57,9 @@ export const initialMembers: FamilyMember[] = [
     "birthplace": "Zaporozhie, Ukrane",
     "bio": "A journalist who traveled the world, Jane had a passion for storytelling and photography.",
     "photoUrl": "https://picsum.photos/seed/heritage4/400/400",
+    "photoHint": "person",
     "parents": [],
     "spouse": "3",
-    "photoHint": "person",
     "children": []
   },
   {
@@ -69,7 +69,7 @@ export const initialMembers: FamilyMember[] = [
     "birthplace": "Chelyabinsk, Russia",
     "bio": "A software developer and amateur musician, Sarah carries on her family's legacy of creativity.",
     "photoUrl": "https://picsum.photos/seed/heritage6/400/400",
-    "photoHint": "woman 1980s",
+    "photoHint": "person",
     "parents": [
       "1",
       "2"

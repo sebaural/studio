@@ -142,17 +142,52 @@ export default function FamilyTreePage() {
       });
 
       startSaving(async () => {
+        // This is the data that will be written to the file.
+        // We need to strip out any translated fields and use the original data
+        // for any fields that were not edited.
         const membersToSave = newMembers.map(m => {
+          // Find the original, untranslated version of the member if it exists.
           const staticMember = staticInitialMembers.find((sm: FamilyMember) => sm.id === m.id);
-          const isTranslated = staticMember && t(`${m.id}.name`) !== `${m.id}.name`;
 
+          // If the member exists in the static data, it might have translations.
+          // We need to decide whether to use the current (potentially edited) value
+          // or the original static value.
+          if (staticMember) {
+            // Check if a translation exists for this member's name.
+            const hasTranslation = t(`${m.id}.name`) !== `${m.id}.name`;
+
+            // If a translation exists, we must decide field by field.
+            // If the current UI value is DIFFERENT from the translated value,
+            // it means the user has edited it, and we should save the UI value.
+            // Otherwise, we save the original static value.
+            // This allows edits to translated members to be persisted.
+            if (hasTranslation) {
+                const translatedMember = getTranslatedMembers().find(tm => tm.id === m.id);
+                return {
+                    id: m.id,
+                    name: m.name !== translatedMember?.name ? m.name : staticMember.name,
+                    birthDate: m.birthDate,
+                    deathDate: m.deathDate,
+                    birthplace: m.birthplace !== translatedMember?.birthplace ? m.birthplace : staticMember.birthplace,
+                    bio: m.bio !== translatedMember?.bio ? m.bio : staticMember.bio,
+                    photoUrl: m.photoUrl,
+                    photoHint: m.photoHint,
+                    parents: m.parents,
+                    spouse: m.spouse,
+                    children: m.children,
+                };
+            }
+          }
+          
+          // If it's a new member (not in static data) or an old member without translations,
+          // save all its fields as they are in the current state.
           return {
             id: m.id,
-            name: isTranslated ? staticMember.name : m.name,
+            name: m.name,
             birthDate: m.birthDate,
             deathDate: m.deathDate,
-            birthplace: isTranslated ? staticMember.birthplace : m.birthplace,
-            bio: isTranslated ? staticMember.bio : m.bio,
+            birthplace: m.birthplace,
+            bio: m.bio,
             photoUrl: m.photoUrl,
             photoHint: m.photoHint,
             parents: m.parents,
