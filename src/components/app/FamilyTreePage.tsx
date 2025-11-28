@@ -17,12 +17,11 @@ type FamilyTreePageProps = {
 export default function FamilyTreePage({ initialMembers }: FamilyTreePageProps) {
   const t = useTranslations('FamilyMembers');
 
-  const getTranslatedMembers = (members: FamilyMember[]) => {
-    // Ensure members is an array before mapping
-    if (!Array.isArray(members)) {
+  const translatedMembers = useMemo(() => {
+    if (!Array.isArray(initialMembers)) {
         return [];
     }
-    return members.map((member) => {
+    return initialMembers.map((member) => {
       const translatedName = t(`${member.id}.name`);
       const hasTranslation = translatedName && translatedName !== `${member.id}.name`;
 
@@ -36,9 +35,9 @@ export default function FamilyTreePage({ initialMembers }: FamilyTreePageProps) 
       }
       return member;
     });
-  };
+  }, [initialMembers, t]);
 
-  const [members, setMembers] = useState<FamilyMember[]>(() => getTranslatedMembers(initialMembers));
+  const [members, setMembers] = useState<FamilyMember[]>(translatedMembers);
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<FamilyMember | undefined>(undefined);
   const [isSaving, startSaving] = useTransition();
