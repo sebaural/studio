@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useTransition, useEffect } from 'react';
@@ -15,12 +16,24 @@ export default function FamilyTreePage() {
   const locale = useLocale();
 
   const getTranslatedMembers = () => {
-    return staticInitialMembers.map(member => ({
-      ...member,
-      name: t(member.id + '.name' as any),
-      birthplace: t(member.id + '.birthplace' as any),
-      bio: t(member.id + '.bio' as any),
-    }));
+    return staticInitialMembers.map(member => {
+      // Check if a translation exists for this member's name.
+      // The `t` function returns the key if the translation is not found.
+      const translatedName = t(`${member.id}.name`);
+      const hasTranslation = translatedName !== `${member.id}.name`;
+
+      if (hasTranslation) {
+        return {
+          ...member,
+          name: translatedName,
+          birthplace: t(`${member.id}.birthplace`),
+          bio: t(`${member.id}.bio`),
+        };
+      }
+      // If no translation exists, return the member as is.
+      // This handles newly added members that don't have i18n keys yet.
+      return member;
+    });
   };
   
   const [members, setMembers] = useState<FamilyMember[]>(getTranslatedMembers());
@@ -31,6 +44,7 @@ export default function FamilyTreePage() {
 
   useEffect(() => {
     setMembers(getTranslatedMembers());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locale]);
 
   const handleSaveMember = (memberToSave: FamilyMember) => {
@@ -144,18 +158,13 @@ export default function FamilyTreePage() {
                     ...staticMember,
                     parents: m.parents,
                     spouse: m.spouse,
-                    children: m.children
+                    children: m.children,
+                    name: m.name,
+                    birthplace: m.birthplace,
+                    bio: m.bio
                 }
             }
-            // This is a new member, so we need to "un-translate" it. 
-            // This is a hacky workaround for this prototype. In a real app,
-            // the form would submit the non-translated version.
-            return {
-                ...m,
-                name: `__NEEDS_TRANSLATION__${m.name}`,
-                birthplace: `__NEEDS_TRANSLATION__${m.birthplace}`,
-                bio: `__NEEDS_TRANSLATION__${m.bio}`,
-            };
+            return m;
         });
 
         const result = await saveFamilyMembers(membersToSave);
@@ -204,3 +213,5 @@ export default function FamilyTreePage() {
     </div>
   );
 }
+
+    

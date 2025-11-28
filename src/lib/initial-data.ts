@@ -14,7 +14,7 @@ export const initialMembers: FamilyMember[] = [
     "photoHint": "person",
     "children": [
       "3",
-      "2025-11-28T17:02:38.409Z0.9630253232209296"
+      "5"
     ]
   },
   {
@@ -30,7 +30,7 @@ export const initialMembers: FamilyMember[] = [
     "photoHint": "person",
     "children": [
       "3",
-      "2025-11-28T17:02:38.409Z0.9630253232209296"
+      "5"
     ]
   },
   {
@@ -47,9 +47,7 @@ export const initialMembers: FamilyMember[] = [
     ],
     "spouse": "4",
     "photoHint": "person",
-    "children": [
-      "5"
-    ]
+    "children": []
   },
   {
     "id": "4",
@@ -62,9 +60,7 @@ export const initialMembers: FamilyMember[] = [
     "parents": [],
     "spouse": "3",
     "photoHint": "person",
-    "children": [
-      "5"
-    ]
+    "children": []
   },
   {
     "id": "5",
@@ -75,24 +71,9 @@ export const initialMembers: FamilyMember[] = [
     "photoUrl": "https://picsum.photos/seed/heritage6/400/400",
     "photoHint": "woman 1980s",
     "parents": [
-      "3",
-      "4"
-    ],
-    "children": []
-  },
-  {
-    "id": "6",
-    "name": "Galina Semyonovna Scherbina",
-    "birthDate": "1936-07-14",
-    "birthplace": "Chelyabinsk, Russia",
-    "bio": "Biologist.",
-    "photoUrl": "https://picsum.photos/seed/heritage6/400/400",
-    "photoHint": "woman 1980s",
-    "parents": [
       "1",
       "2"
     ],
-    "photoHint": "person",
     "children": []
   }
 ];
