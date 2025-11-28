@@ -67,7 +67,7 @@ export const initialMembers: FamilyMember[] = [
     "name": "Galina Semyonovna Scherbina",
     "birthDate": "1936-07-14",
     "birthplace": "Chelyabinsk, Russia",
-    "bio": "A software developer and amateur musician, Sarah carries on her family's legacy of creativity.",
+    "bio": "Biologist",
     "photoUrl": "https://picsum.photos/seed/heritage6/400/400",
     "parents": [
       "1",

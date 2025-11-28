@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import type { FamilyMember } from '@/lib/types';
 import Header from '@/components/app/Header';
@@ -10,15 +10,14 @@ import AddFamilyMemberDialog from '@/components/app/AddFamilyMemberDialog';
 import { saveFamilyMembers } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 
-// Dynamically require `initial-data` to bypass Next.js module cache in dev mode.
-// This ensures that the latest data is loaded from the file on each render.
-const { initialMembers: staticInitialMembers } = require('@/lib/initial-data');
-// Also dynamically load the English messages to get original, untranslated names.
-const enMessages = require('../../../messages/en.json');
+// Statically import the initial data and the English messages.
+import { initialMembers as staticInitialMembers } from '@/lib/initial-data';
+import enMessages from '../../../messages/en.json';
 
 export default function FamilyTreePage() {
   const t = useTranslations('FamilyMembers');
 
+  // useMemo will re-run when the staticInitialMembers reference changes (due to hot-reload)
   const getTranslatedMembers = () => {
     return staticInitialMembers.map((member: FamilyMember) => {
       // Use the translation if it exists, otherwise use the member's default name.
@@ -41,11 +40,11 @@ export default function FamilyTreePage() {
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<FamilyMember | undefined>(undefined);
   const [isSaving, startSaving] = useTransition();
+  const [treeKey, setTreeKey] = useState(Date.now()); // Add a key for re-rendering the tree
   const { toast } = useToast();
   
   const handleSaveMember = (memberToSave: FamilyMember) => {
     startSaving(async () => {
-      // Create the next state of members based on the saved member
       const newMembers = ((prevMembers) => {
         const updatedMembers = [...prevMembers];
         const existingMemberIndex = updatedMembers.findIndex((m) => m.id === memberToSave.id);
@@ -56,20 +55,14 @@ export default function FamilyTreePage() {
               : undefined;
     
           if (existingMemberIndex > -1) {
-            // Update existing member
             updatedMembers[existingMemberIndex] = memberToSave;
           } else {
-            // Add new member
             updatedMembers.push(memberToSave);
           }
     
-          // --- Handle relationship updates ---
-    
-          // 1. Spouse relationship
           const oldSpouseId = oldMember?.spouse;
           const newSpouseId = memberToSave.spouse;
     
-          // Clear old spouse's spouse field if it's changed
           if (oldSpouseId && oldSpouseId !== newSpouseId) {
             const oldSpouseIndex = updatedMembers.findIndex((m) => m.id === oldSpouseId);
             if (oldSpouseIndex > -1) {
@@ -80,11 +73,9 @@ export default function FamilyTreePage() {
             }
           }
     
-          // Set new spouse's spouse field
           if (newSpouseId) {
             const newSpouseIndex = updatedMembers.findIndex((m) => m.id === newSpouseId);
             if (newSpouseIndex > -1) {
-              // Unset the new spouse's current partner if they have one
               const newSpousesCurrentPartnerId = updatedMembers[newSpouseIndex].spouse;
               if (
                 newSpousesCurrentPartnerId &&
@@ -107,14 +98,12 @@ export default function FamilyTreePage() {
             }
           }
     
-          // 2. Parent-child relationship
           const oldParents = oldMember?.parents || [];
           const newParents = memberToSave.parents || [];
     
           const addedParents = newParents.filter((pId) => !oldParents.includes(pId));
           const removedParents = oldParents.filter((pId) => !newParents.includes(pId));
     
-          // Add child to new parents
           addedParents.forEach((pId) => {
             const parentIndex = updatedMembers.findIndex((m) => m.id === pId);
             if (
@@ -128,7 +117,6 @@ export default function FamilyTreePage() {
             }
           });
     
-          // Remove child from old parents
           removedParents.forEach((pId) => {
             const parentIndex = updatedMembers.findIndex((m) => m.id === pId);
             if (parentIndex > -1) {
@@ -144,38 +132,25 @@ export default function FamilyTreePage() {
           return updatedMembers;
       })(members);
 
-      // This is the data that will be written to the file.
-      // It must be stripped of any translations to keep the data file clean.
       const membersToSave = newMembers.map(member => {
-        // Find original English data from the messages file, if it exists.
-        const originalData = enMessages.FamilyMembers[member.id];
+        const originalData = enMessages.FamilyMembers[member.id as keyof typeof enMessages.FamilyMembers];
         const newMember = {...member};
-
-        if (originalData) {
-            newMember.name = originalData.name;
-            newMember.birthplace = originalData.birthplace;
-            newMember.bio = originalData.bio;
-        }
-
-        // If the user has edited the fields, use the edited values.
-        if (member.name !== t(`${member.id}.name`)) {
-            newMember.name = member.name;
-        }
-        if (member.birthplace !== t(`${member.id}.birthplace`)) {
-            newMember.birthplace = member.birthplace;
-        }
-        if (member.bio !== t(`${member.id}.bio`)) {
-            newMember.bio = member.bio;
-        }
         
+        if (originalData) {
+          if (member.name === t(`${member.id}.name`)) newMember.name = originalData.name;
+          if (member.birthplace === t(`${member.id}.birthplace`)) newMember.birthplace = originalData.birthplace;
+          if (member.bio === t(`${member.id}.bio`)) newMember.bio = originalData.bio;
+        }
+
         return newMember;
       });
       
       const result = await saveFamilyMembers(membersToSave);
       if (result.success) {
-        setMembers(newMembers); // Update UI state after successful save
+        setMembers(newMembers); 
         setAddMemberOpen(false);
         setEditingMember(undefined);
+        setTreeKey(Date.now()); // Force re-render of the tree
       } else {
         toast({
           title: 'Error Saving Data',
@@ -200,7 +175,7 @@ export default function FamilyTreePage() {
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <Header onAddMember={handleAddMember} />
       <main className="flex-grow container mx-auto px-4 py-8">
-        <FamilyTree members={members} onEditMember={handleEditMember} />
+        <FamilyTree key={treeKey} members={members} onEditMember={handleEditMember} />
       </main>
       <AddFamilyMemberDialog
         isOpen={isAddMemberOpen}
