@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useTransition } from 'react';
@@ -12,12 +13,15 @@ import { useToast } from '@/hooks/use-toast';
 // Dynamically require `initial-data` to bypass Next.js module cache in dev mode.
 // This ensures that the latest data is loaded from the file on each render.
 const { initialMembers: staticInitialMembers } = require('@/lib/initial-data');
+// Also dynamically load the English messages to get original, untranslated names.
+const enMessages = require('../../../messages/en.json');
 
 export default function FamilyTreePage() {
   const t = useTranslations('FamilyMembers');
 
   const getTranslatedMembers = () => {
     return staticInitialMembers.map((member: FamilyMember) => {
+      // Use the translation if it exists, otherwise use the member's default name.
       const translatedName = t(`${member.id}.name`);
       const hasTranslation = translatedName !== `${member.id}.name`;
 
@@ -40,7 +44,7 @@ export default function FamilyTreePage() {
   const { toast } = useToast();
   
   const handleSaveMember = (memberToSave: FamilyMember) => {
-    let newMembers: FamilyMember[];
+    let newMembers: FamilyMember[] = [];
 
     setMembers((prevMembers) => {
       const updatedMembers = [...prevMembers];
@@ -143,57 +147,26 @@ export default function FamilyTreePage() {
 
       startSaving(async () => {
         // This is the data that will be written to the file.
-        // We need to strip out any translated fields and use the original data
-        // for any fields that were not edited.
-        const membersToSave = newMembers.map(m => {
-          // Find the original, untranslated version of the member if it exists.
-          const staticMember = staticInitialMembers.find((sm: FamilyMember) => sm.id === m.id);
-
-          // If the member exists in the static data, it might have translations.
-          // We need to decide whether to use the current (potentially edited) value
-          // or the original static value.
-          if (staticMember) {
-            // Check if a translation exists for this member's name.
-            const hasTranslation = t(`${m.id}.name`) !== `${m.id}.name`;
-
-            // If a translation exists, we must decide field by field.
-            // If the current UI value is DIFFERENT from the translated value,
-            // it means the user has edited it, and we should save the UI value.
-            // Otherwise, we save the original static value.
-            // This allows edits to translated members to be persisted.
-            if (hasTranslation) {
-                const translatedMember = getTranslatedMembers().find(tm => tm.id === m.id);
+        // It must be stripped of any translations to keep the data file clean.
+        const membersToSave = newMembers.map(member => {
+            // Find original English data from the messages file, if it exists.
+            const originalData = enMessages.FamilyMembers[member.id];
+            
+            // If there's original data, we use it as the base, unless the
+            // current (potentially translated) value in the UI is different,
+            // which means the user has edited it.
+            if (originalData) {
+                const translatedMember = getTranslatedMembers().find(tm => tm.id === member.id);
                 return {
-                    id: m.id,
-                    name: m.name !== translatedMember?.name ? m.name : staticMember.name,
-                    birthDate: m.birthDate,
-                    deathDate: m.deathDate,
-                    birthplace: m.birthplace !== translatedMember?.birthplace ? m.birthplace : staticMember.birthplace,
-                    bio: m.bio !== translatedMember?.bio ? m.bio : staticMember.bio,
-                    photoUrl: m.photoUrl,
-                    photoHint: m.photoHint,
-                    parents: m.parents,
-                    spouse: m.spouse,
-                    children: m.children,
+                    ...member, // a good base with all relationships
+                    name: member.name !== translatedMember?.name ? member.name : originalData.name,
+                    birthplace: member.birthplace !== translatedMember?.birthplace ? member.birthplace : originalData.birthplace,
+                    bio: member.bio !== translatedMember?.bio ? member.bio : originalData.bio,
                 };
             }
-          }
-          
-          // If it's a new member (not in static data) or an old member without translations,
-          // save all its fields as they are in the current state.
-          return {
-            id: m.id,
-            name: m.name,
-            birthDate: m.birthDate,
-            deathDate: m.deathDate,
-            birthplace: m.birthplace,
-            bio: m.bio,
-            photoUrl: m.photoUrl,
-            photoHint: m.photoHint,
-            parents: m.parents,
-            spouse: m.spouse,
-            children: m.children,
-          };
+            
+            // If it's a new member (no original data), save all its fields as is.
+            return member;
         });
 
         const result = await saveFamilyMembers(membersToSave);
