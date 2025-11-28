@@ -23,7 +23,7 @@ export default function FamilyTreePage() {
     return staticInitialMembers.map((member: FamilyMember) => {
       // Use the translation if it exists, otherwise use the member's default name.
       const translatedName = t(`${member.id}.name`);
-      const hasTranslation = translatedName !== `${member.id}.name`;
+      const hasTranslation = translatedName !== `${member.id}.name` && translatedName !== '';
 
       if (hasTranslation) {
         return {
@@ -44,143 +44,143 @@ export default function FamilyTreePage() {
   const { toast } = useToast();
   
   const handleSaveMember = (memberToSave: FamilyMember) => {
-    let newMembers: FamilyMember[] = [];
-
-    setMembers((prevMembers) => {
-      const updatedMembers = [...prevMembers];
-      const existingMemberIndex = updatedMembers.findIndex((m) => m.id === memberToSave.id);
-  
-        const oldMember =
-          existingMemberIndex > -1
-            ? updatedMembers[existingMemberIndex]
-            : undefined;
-  
-        if (existingMemberIndex > -1) {
-          // Update existing member
-          updatedMembers[existingMemberIndex] = memberToSave;
-        } else {
-          // Add new member
-          updatedMembers.push(memberToSave);
-        }
-  
-        // --- Handle relationship updates ---
-  
-        // 1. Spouse relationship
-        const oldSpouseId = oldMember?.spouse;
-        const newSpouseId = memberToSave.spouse;
-  
-        // Clear old spouse's spouse field if it's changed
-        if (oldSpouseId && oldSpouseId !== newSpouseId) {
-          const oldSpouseIndex = updatedMembers.findIndex((m) => m.id === oldSpouseId);
-          if (oldSpouseIndex > -1) {
-            updatedMembers[oldSpouseIndex] = {
-              ...updatedMembers[oldSpouseIndex],
-              spouse: undefined,
-            };
+    startSaving(async () => {
+      // Create the next state of members based on the saved member
+      const newMembers = ((prevMembers) => {
+        const updatedMembers = [...prevMembers];
+        const existingMemberIndex = updatedMembers.findIndex((m) => m.id === memberToSave.id);
+    
+          const oldMember =
+            existingMemberIndex > -1
+              ? updatedMembers[existingMemberIndex]
+              : undefined;
+    
+          if (existingMemberIndex > -1) {
+            // Update existing member
+            updatedMembers[existingMemberIndex] = memberToSave;
+          } else {
+            // Add new member
+            updatedMembers.push(memberToSave);
           }
-        }
-  
-        // Set new spouse's spouse field
-        if (newSpouseId) {
-          const newSpouseIndex = updatedMembers.findIndex((m) => m.id === newSpouseId);
-          if (newSpouseIndex > -1) {
-            // Unset the new spouse's current partner if they have one
-            const newSpousesCurrentPartnerId = updatedMembers[newSpouseIndex].spouse;
-            if (
-              newSpousesCurrentPartnerId &&
-              newSpousesCurrentPartnerId !== memberToSave.id
-            ) {
-              const partnerIndex = updatedMembers.findIndex(
-                (m) => m.id === newSpousesCurrentPartnerId
-              );
-              if (partnerIndex > -1) {
-                updatedMembers[partnerIndex] = {
-                  ...updatedMembers[partnerIndex],
-                  spouse: undefined,
-                };
+    
+          // --- Handle relationship updates ---
+    
+          // 1. Spouse relationship
+          const oldSpouseId = oldMember?.spouse;
+          const newSpouseId = memberToSave.spouse;
+    
+          // Clear old spouse's spouse field if it's changed
+          if (oldSpouseId && oldSpouseId !== newSpouseId) {
+            const oldSpouseIndex = updatedMembers.findIndex((m) => m.id === oldSpouseId);
+            if (oldSpouseIndex > -1) {
+              updatedMembers[oldSpouseIndex] = {
+                ...updatedMembers[oldSpouseIndex],
+                spouse: undefined,
+              };
+            }
+          }
+    
+          // Set new spouse's spouse field
+          if (newSpouseId) {
+            const newSpouseIndex = updatedMembers.findIndex((m) => m.id === newSpouseId);
+            if (newSpouseIndex > -1) {
+              // Unset the new spouse's current partner if they have one
+              const newSpousesCurrentPartnerId = updatedMembers[newSpouseIndex].spouse;
+              if (
+                newSpousesCurrentPartnerId &&
+                newSpousesCurrentPartnerId !== memberToSave.id
+              ) {
+                const partnerIndex = updatedMembers.findIndex(
+                  (m) => m.id === newSpousesCurrentPartnerId
+                );
+                if (partnerIndex > -1) {
+                  updatedMembers[partnerIndex] = {
+                    ...updatedMembers[partnerIndex],
+                    spouse: undefined,
+                  };
+                }
               }
+              updatedMembers[newSpouseIndex] = {
+                ...updatedMembers[newSpouseIndex],
+                spouse: memberToSave.id,
+              };
             }
-            updatedMembers[newSpouseIndex] = {
-              ...updatedMembers[newSpouseIndex],
-              spouse: memberToSave.id,
-            };
           }
-        }
-  
-        // 2. Parent-child relationship
-        const oldParents = oldMember?.parents || [];
-        const newParents = memberToSave.parents || [];
-  
-        const addedParents = newParents.filter((pId) => !oldParents.includes(pId));
-        const removedParents = oldParents.filter((pId) => !newParents.includes(pId));
-  
-        // Add child to new parents
-        addedParents.forEach((pId) => {
-          const parentIndex = updatedMembers.findIndex((m) => m.id === pId);
-          if (
-            parentIndex > -1 &&
-            !updatedMembers[parentIndex].children.includes(memberToSave.id)
-          ) {
-            updatedMembers[parentIndex] = {
-              ...updatedMembers[parentIndex],
-              children: [...updatedMembers[parentIndex].children, memberToSave.id],
-            };
-          }
-        });
-  
-        // Remove child from old parents
-        removedParents.forEach((pId) => {
-          const parentIndex = updatedMembers.findIndex((m) => m.id === pId);
-          if (parentIndex > -1) {
-            updatedMembers[parentIndex] = {
-              ...updatedMembers[parentIndex],
-              children: updatedMembers[parentIndex].children.filter(
-                (cId) => cId !== memberToSave.id
-              ),
-            };
-          }
-        });
-  
-        newMembers = updatedMembers;
-        return newMembers;
-      });
-
-      startSaving(async () => {
-        // This is the data that will be written to the file.
-        // It must be stripped of any translations to keep the data file clean.
-        const membersToSave = newMembers.map(member => {
-            // Find original English data from the messages file, if it exists.
-            const originalData = enMessages.FamilyMembers[member.id];
-            
-            // If there's original data, we use it as the base, unless the
-            // current (potentially translated) value in the UI is different,
-            // which means the user has edited it.
-            if (originalData) {
-                const translatedMember = getTranslatedMembers().find(tm => tm.id === member.id);
-                return {
-                    ...member, // a good base with all relationships
-                    name: member.name !== translatedMember?.name ? member.name : originalData.name,
-                    birthplace: member.birthplace !== translatedMember?.birthplace ? member.birthplace : originalData.birthplace,
-                    bio: member.bio !== translatedMember?.bio ? member.bio : originalData.bio,
-                };
+    
+          // 2. Parent-child relationship
+          const oldParents = oldMember?.parents || [];
+          const newParents = memberToSave.parents || [];
+    
+          const addedParents = newParents.filter((pId) => !oldParents.includes(pId));
+          const removedParents = oldParents.filter((pId) => !newParents.includes(pId));
+    
+          // Add child to new parents
+          addedParents.forEach((pId) => {
+            const parentIndex = updatedMembers.findIndex((m) => m.id === pId);
+            if (
+              parentIndex > -1 &&
+              !updatedMembers[parentIndex].children.includes(memberToSave.id)
+            ) {
+              updatedMembers[parentIndex] = {
+                ...updatedMembers[parentIndex],
+                children: [...updatedMembers[parentIndex].children, memberToSave.id],
+              };
             }
-            
-            // If it's a new member (no original data), save all its fields as is.
-            return member;
-        });
-
-        const result = await saveFamilyMembers(membersToSave);
-        if (result.success) {
-          setAddMemberOpen(false);
-          setEditingMember(undefined);
-        } else {
-          toast({
-            title: 'Error Saving Data',
-            description: result.error,
-            variant: 'destructive',
           });
+    
+          // Remove child from old parents
+          removedParents.forEach((pId) => {
+            const parentIndex = updatedMembers.findIndex((m) => m.id === pId);
+            if (parentIndex > -1) {
+              updatedMembers[parentIndex] = {
+                ...updatedMembers[parentIndex],
+                children: updatedMembers[parentIndex].children.filter(
+                  (cId) => cId !== memberToSave.id
+                ),
+              };
+            }
+          });
+    
+          return updatedMembers;
+      })(members);
+
+      // This is the data that will be written to the file.
+      // It must be stripped of any translations to keep the data file clean.
+      const membersToSave = newMembers.map(member => {
+        // Find original English data from the messages file, if it exists.
+        const originalData = enMessages.FamilyMembers[member.id];
+        
+        // If there's no original data, it's a new member, so save all fields as is.
+        if (!originalData) {
+          return member;
         }
+        
+        // Find the current translated version to compare against for edits.
+        const translatedMember = getTranslatedMembers().find(tm => tm.id === member.id);
+        
+        // If there's original data, we use it as the base, unless the
+        // current value in the UI is different, which means the user has edited it.
+        return {
+          ...member,
+          name: (member.name !== translatedMember?.name) ? member.name : originalData.name,
+          birthplace: (member.birthplace !== translatedMember?.birthplace) ? member.birthplace : originalData.birthplace,
+          bio: (member.bio !== translatedMember?.bio) ? member.bio : originalData.bio,
+        };
       });
+
+      const result = await saveFamilyMembers(membersToSave);
+      if (result.success) {
+        setMembers(newMembers); // Update UI state after successful save
+        setAddMemberOpen(false);
+        setEditingMember(undefined);
+      } else {
+        toast({
+          title: 'Error Saving Data',
+          description: result.error,
+          variant: 'destructive',
+        });
+      }
+    });
   };
   
   const handleAddMember = () => {
