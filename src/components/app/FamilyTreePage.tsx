@@ -150,21 +150,27 @@ export default function FamilyTreePage() {
       });
 
       startSaving(async () => {
-        // We need to save the non-translated version. We can find the original from staticInitialMembers
         const membersToSave = newMembers.map(m => {
-            const staticMember = staticInitialMembers.find(sm => sm.id === m.id);
-            if (staticMember) {
-                return {
-                    ...staticMember,
-                    parents: m.parents,
-                    spouse: m.spouse,
-                    children: m.children,
-                    name: m.name,
-                    birthplace: m.birthplace,
-                    bio: m.bio
-                }
-            }
-            return m;
+          const staticMember = staticInitialMembers.find(sm => sm.id === m.id);
+          
+          // If it's a new member or an existing member that is not in the english translation file.
+          // The name, birthplace, and bio will come from the form.
+          // Otherwise, we use the original english version for i18n to work.
+          const isTranslated = staticMember && t(`${m.id}.name`) !== `${m.id}.name`;
+
+          return {
+            id: m.id,
+            name: isTranslated ? staticMember.name : m.name,
+            birthDate: m.birthDate,
+            deathDate: m.deathDate,
+            birthplace: isTranslated ? staticMember.birthplace : m.birthplace,
+            bio: isTranslated ? staticMember.bio : m.bio,
+            photoUrl: m.photoUrl,
+            photoHint: m.photoHint,
+            parents: m.parents,
+            spouse: m.spouse,
+            children: m.children,
+          };
         });
 
         const result = await saveFamilyMembers(membersToSave);
